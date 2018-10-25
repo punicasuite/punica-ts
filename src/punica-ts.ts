@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import * as git from 'isomorphic-git';
 import * as process from 'process';
 import { Box } from './box/box';
+import { Compiler } from './compile/compiler';
 
 git.plugins.set('fs', fs);
 
@@ -15,15 +16,18 @@ program
   .name('punica-ts')
   .description('Punica CLI')
   .version('0.1.0', '-v, --version')
-  .option('-p, --project [PATH]', 'Specify a punica project directory');
+  .option('-p, --project [PATH]', 'Specify a punica project directory')
+  .option('-d, --debug', 'Print exceptions');
 program.parse(process.argv);
 
 program
   .command('init')
   .description('Initialize new and empty Ontology DApp project')
   .action(() => {
-    const box = new Box();
-    return box.init(getProjectDir());
+    return wrapDebug(async () => {
+      const box = new Box();
+      return box.init(getProjectDir());
+    });
   });
 
 program
@@ -34,19 +38,27 @@ program
     const boxName: string = options.box_name;
     checkRequiredOption('box_name', boxName);
 
-    const box = new Box();
-    return box.unbox(boxName, getProjectDir());
+    return wrapDebug(async () => {
+      const box = new Box();
+      return box.unbox(boxName, getProjectDir());
+    });
   });
 
 program
   .command('compile')
-  .description('Compile specified contracts files in contracts dir')
-  .action(() => {
+  .description('Compile the specified contracts to avm and abi files')
+  .option('--contracts [CONTRACTS]', 'Specify contracts files in contracts dir')
+  .action((options) => {
     const projectDir = getProjectDir();
 
-    try {
-      console.log('Compile');
-    } catch (e) {}
+    return wrapDebug(async () => {
+      console.log('Compiling...');
+
+      const compiler = new Compiler();
+      await compiler.compile(projectDir, options.contracts);
+
+      console.log('Compiled, Thank you');
+    });
   });
 
 program
@@ -100,4 +112,15 @@ function checkRequiredOption(name: string, value: any) {
     console.log(`Option --${name} is required.`);
     process.exit(1);
   }
+}
+
+function wrapDebug(func: () => Promise<void>) {
+  return func().catch((reason) => {
+    if (program.debug) {
+      console.error(reason);
+    } else {
+      console.error(`Error: ${reason.message}.`);
+      console.error('To see the stacktrace use option -d.');
+    }
+  });
 }

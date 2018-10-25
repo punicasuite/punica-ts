@@ -35,7 +35,7 @@
   "homepage": "https://github.com/OntologyCommunityDevelopers/punica-ts",
   "devDependencies": {
     "@types/jest": "^23.3.1",
-    "@types/node": "^8.5.2",
+    "@types/node": "^10.0.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "commander": "^2.18.0",
-    "isomorphic-git": "^0.37.3"
+    "isomorphic-git": "^0.37.3",
+    "ontology-ts-test": "^0.1.9"
   }
 }

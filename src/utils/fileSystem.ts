@@ -21,3 +21,13 @@ export function ensureRemoveDirIfExists(path: fs.PathLike) {
     fs.rmdirSync(path);
   }
 }
+
+export function ensureDirExist(path: fs.PathLike) {
+  if (fs.existsSync(path)) {
+    if (fs.statSync(path).isFile()) {
+      throw new Error(`Path ${path} is a file. Should be a directory.`);
+    }
+  } else {
+    fs.mkdirSync(path, { recursive: true });
+  }
+}

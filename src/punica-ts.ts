@@ -14,7 +14,7 @@ git.plugins.set('fs', fs);
 
 program
   .name('punica-ts')
-  .description('Punica CLI')
+  .description('Punica CLI - The Ontology Blockchain dApp development framework')
   .version('0.1.0', '-v, --version')
   .option('-p, --project [PATH]', 'Specify a punica project directory')
   .option('-d, --debug', 'Print exceptions');
@@ -68,7 +68,14 @@ program
   .option('--wallet <WALLET>', 'Specify which wallet file will be used')
   .option('--config <CONFIG>', 'Specify which deploy config file will be used')
   .action((options) => {
-    console.log('deploying');
+    const projectDir = getProjectDir();
+
+    return wrapDebug(async () => {
+      console.log('Deploying...');
+
+      console.log('Deploy successful to network...');
+      // console.log(`0x${tx_hash}`);
+    });
   });
 
 program

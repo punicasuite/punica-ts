@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import { Address, deploy, initClient, reverseBuffer } from 'ontology-ts-test';
 import * as path from 'path';
+import { loadAccount, loadDeploy, loadNetwork } from '../config/configLoader';
 import { readAvm } from '../utils/fileSystem';
-import { loadNetwork, loadDeploy } from '../config/configLoader';
 
 // tslint:disable:no-console
 
@@ -35,8 +35,8 @@ export class Deployer {
     }
 
     const rpcAddress: string = loadNetwork(projectDir, networkKey);
-    const account = loadAccount(walletFileName);
     const deployInfo = loadDeploy(projectDir, configKey);
+    const account = loadAccount(projectDir, walletFileName, deployInfo.payer);
 
     let avm: Buffer;
     [avm, avmFileName] = readAvm(avmDirPath, avmFileName);
@@ -49,7 +49,10 @@ export class Deployer {
 
       await deploy({
         client,
-        account,
+        account: {
+          address: account.address,
+          privateKey: account.key
+        },
         code: avm,
         gasLimit: String(deployInfo.gasLimit),
         gasPrice: String(deployInfo.gasPrice),

@@ -1,14 +1,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { DEFAULT_CONFIG } from '../consts';
-import { configFileError, configFileNotFound, otherError } from '../exception/punicaException';
-import { Config } from './configTypes';
+import {
+  configFileError,
+  configFileNotFound,
+  otherError,
+  walletFileError,
+  walletFileUnspecified
+} from '../exception/punicaException';
+import { Config, Wallet } from './configTypes';
 
 // tslint:disable:no-console
 
-export function loadConfig(configDirPath: string) {
+export function loadConfig(configFilePath: string) {
   try {
-    const configFilePath = path.join(configDirPath, 'punica-config.json');
     const f = fs.readFileSync(configFilePath);
     return JSON.parse(f.toString()) as Config;
   } catch (e) {
@@ -17,27 +22,34 @@ export function loadConfig(configDirPath: string) {
 }
 
 export function loadNetwork(configDirPath: string, networkKey?: string, debug?: boolean) {
-  const config = loadConfig(configDirPath);
+  const configFilePath = path.join(configDirPath, 'punica-config.json');
 
   try {
-    if (networkKey === undefined) {
-      networkKey = Object.keys(config.networks)[0];
-    }
-  } catch (e) {
-    throw configFileError();
-  }
+    const config = loadConfig(configFilePath);
 
-  try {
-    const network = config.networks[networkKey];
-    const address = `${network.host}:${network.port}`;
-
-    if (debug) {
-      console.log(`Using network '${network}'.`);
+    try {
+      if (networkKey === undefined) {
+        networkKey = Object.keys(config.networks)[0];
+      }
+    } catch (e) {
+      throw configFileError();
     }
 
-    return address;
+    try {
+      const network = config.networks[networkKey];
+      const address = `${network.host}:${network.port}`;
+
+      if (debug) {
+        console.log(`Using network '${network}'.`);
+      }
+
+      return address;
+    } catch (e) {
+      throw configFileError();
+    }
   } catch (e) {
-    throw configFileError();
+    console.log('No punica-config.json config found. Using TEST-NET.');
+    return 'http://polaris1.ont.io:20336';
   }
 }
 
@@ -67,10 +79,62 @@ export function loadDeploy(projectDir: string, configDir?: string) {
 
   const config = loadConfig(configPath);
 
-  const deployInformation = config.deployInformation;
+  let deployInformation = config.deployInformation;
   if (deployInformation === undefined || typeof deployInformation !== 'object') {
-    throw configFileError();
+    deployInformation = (config as any).deployConfig;
+
+    if (deployInformation === undefined || typeof deployInformation !== 'object') {
+      throw configFileError();
+    }
   }
 
   return deployInformation;
+}
+
+export function loadWallet(projectDir: string, walletFileName?: string) {
+  let walletPath: string;
+
+  if (walletFileName === undefined) {
+    const walletDirPath = path.join(projectDir, 'wallet');
+    const dir = fs.readdirSync(walletDirPath);
+
+    if (dir.length === 1) {
+      walletPath = path.join(walletDirPath, dir[0]);
+    } else {
+      throw walletFileUnspecified();
+    }
+  } else {
+    walletPath = path.join(projectDir, walletFileName);
+
+    if (!fs.existsSync(walletPath)) {
+      walletPath = path.join(projectDir, 'wallet', walletFileName);
+
+      if (!fs.existsSync(walletPath)) {
+        throw otherError(`${walletPath} does not exist`);
+      }
+    }
+  }
+
+  try {
+    const f = fs.readFileSync(walletPath);
+    return JSON.parse(f.toString()) as Wallet;
+  } catch (e) {
+    throw walletFileError();
+  }
+}
+
+export function loadAccount(projectDir: string, walletFileName?: string, address?: string) {
+  const wallet = loadWallet(projectDir, walletFileName);
+
+  if (address === undefined) {
+    address = wallet.defaultAccountAddress;
+  }
+
+  for (const account of wallet.accounts) {
+    if (account.address === address) {
+      return account;
+    }
+  }
+
+  throw otherError('Payer account not found');
 }

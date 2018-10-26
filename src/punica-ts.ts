@@ -9,6 +9,7 @@ import * as git from 'isomorphic-git';
 import * as process from 'process';
 import { Box } from './box/box';
 import { Compiler } from './compile/compiler';
+import { Deployer } from './deploy/deployer';
 
 git.plugins.set('fs', fs);
 
@@ -57,23 +58,27 @@ program
       const compiler = new Compiler();
       await compiler.compile(projectDir, options.contracts);
 
-      console.log('Compiled, Thank you');
+      console.log('Compiled, Thank you.');
     });
   });
 
 program
   .command('deploy')
   .description('Deploy the specified contracts to specified chain')
-  .option('--avm <AVM>', 'Specify which avm file will be deployed')
-  .option('--wallet <WALLET>', 'Specify which wallet file will be used')
-  .option('--config <CONFIG>', 'Specify which deploy config file will be used')
+  .option('--network [NETWORK]', 'Specify which network the contracts will be deployed')
+  .option('--avm [AVM]', 'Specify which avm file will be deployed')
+  .option('--wallet [WALLET]', 'Specify which wallet file will be used')
+  .option('--config [CONFIG]', 'Specify which deploy config file will be used')
   .action((options) => {
     const projectDir = getProjectDir();
 
     return wrapDebug(async () => {
       console.log('Deploying...');
 
-      console.log('Deploy successful to network...');
+      const deployer = new Deployer();
+      await deployer.deploy(projectDir, options.network, options.avm, options.wallet, options.config);
+
+      console.log('Deploy successful.');
       // console.log(`0x${tx_hash}`);
     });
   });
@@ -81,7 +86,7 @@ program
 program
   .command('invoke')
   .description('Invoke the function list in default-config or specify config.')
-  .option('--network <NETWORK>', 'Specify which network the contracts will be deployed')
+  .option('--network [NETWORK]', 'Specify which network the contracts will be invoked')
   .option('--avm <AVM>', 'Specify which avm file will be deployed')
   .option('--wallet <WALLET>', 'Specify which wallet file will be used')
   .option('--functions <FUNCTIONS>', 'Specify which function will be executed')

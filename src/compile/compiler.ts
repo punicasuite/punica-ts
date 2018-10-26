@@ -65,7 +65,7 @@ export class Compiler {
 
     if (abiSavePath === undefined) {
       const splitPath = path.parse(contractPath);
-      const savePath = path.join(path.dirname(splitPath.dir), 'build', splitPath.base);
+      const savePath = path.join(splitPath.dir, 'build', splitPath.base);
       if (savePath.endsWith('.py')) {
         abiSavePath = savePath.replace('.py', '_abi.json');
       } else {
@@ -75,7 +75,7 @@ export class Compiler {
 
     if (avmSavePath === undefined) {
       const splitPath = path.parse(contractPath);
-      const savePath = path.join(path.dirname(splitPath.dir), 'build', splitPath.base);
+      const savePath = path.join(splitPath.dir, 'build', splitPath.base);
       if (savePath.endsWith('.py')) {
         avmSavePath = savePath.replace('.py', '.avm');
       } else {

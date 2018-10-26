@@ -13,6 +13,8 @@ export const configFileNotFound = () => new PunicaException(10001, 'punica confi
 export const configFileError = () => new PunicaException(10002, 'error exist in punica config file');
 export const walletFileNotFound = () => new PunicaException(10003, 'wallet file not found');
 export const walletFileError = () => new PunicaException(10004, 'error exist in wallet file');
+export const walletFileUnspecified = () => new PunicaException(10005, 'wallet file unspecified');
+
 // tslint:disable-next-line:quotemark
 export const directoryError = () => new PunicaException(10006, "the path isn't a directory");
 export const avmFileEmpty = () => new PunicaException(10007, 'the avm file is empty');

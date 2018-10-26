@@ -116,16 +116,14 @@ export function loadWallet(projectDir: string, walletFileName?: string) {
   }
 
   try {
-    const f = fs.readFileSync(walletPath);
-    return JSON.parse(f.toString()) as Wallet;
+    const f = fs.readFileSync(walletPath, 'utf8');
+    return JSON.parse(f) as Wallet;
   } catch (e) {
     throw walletFileError();
   }
 }
 
-export function loadAccount(projectDir: string, walletFileName?: string, address?: string) {
-  const wallet = loadWallet(projectDir, walletFileName);
-
+export function loadAccount(wallet: Wallet, address?: string) {
   if (address === undefined) {
     address = wallet.defaultAccountAddress;
   }

@@ -77,9 +77,6 @@ program
 
       const deployer = new Deployer();
       await deployer.deploy(projectDir, options.network, options.avm, options.wallet, options.config);
-
-      // console.log('Deploy successful.');
-      // console.log(`0x${tx_hash}`);
     });
   });
 

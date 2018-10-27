@@ -48,7 +48,7 @@ export function loadNetwork(configDirPath: string, networkKey?: string, debug?: 
       throw configFileError();
     }
   } catch (e) {
-    console.log('No punica-config.json config found. Using TEST-NET.');
+    console.log('No punica-config.json config found. Using TEST-NET');
     return 'http://polaris1.ont.io:20336';
   }
 }

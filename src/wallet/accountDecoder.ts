@@ -51,7 +51,7 @@ function decryptWithGcm(encrypted: string, address: string, salt: Buffer, keyphr
   try {
     decrypted += decipher.final().toString('hex');
   } catch (err) {
-    throw otherError('Decrypt error');
+    throw otherError('Password incorrect');
   }
   return decrypted;
 }

@@ -2,7 +2,6 @@
 
 // tslint:disable:no-console
 
-import 'babel-polyfill';
 import * as program from 'commander';
 import * as fs from 'fs';
 import * as git from 'isomorphic-git';
@@ -23,7 +22,7 @@ program.parse(process.argv);
 
 program
   .command('init')
-  .description('Initialize new and empty Ontology DApp project')
+  .description('initialize new and empty Ontology DApp project')
   .action(() => {
     return wrapDebug(async () => {
       const box = new Box();
@@ -33,7 +32,7 @@ program
 
 program
   .command('unbox')
-  .description('Download a Punica Box, a pre-built Ontology DApp project.')
+  .description('download a Punica Box, a pre-built Ontology DApp project.')
   .option('--box_name <BOX_NAME>', 'Specify which box to unbox')
   .action((options) => {
     const boxName: string = options.box_name;
@@ -47,7 +46,7 @@ program
 
 program
   .command('compile')
-  .description('Compile the specified contracts to avm and abi files')
+  .description('compile the specified contracts to avm and abi files')
   .option('--contracts [CONTRACTS]', 'Specify contracts files in contracts dir')
   .action((options) => {
     const projectDir = getProjectDir();
@@ -64,7 +63,7 @@ program
 
 program
   .command('deploy')
-  .description('Deploy the specified contracts to specified chain')
+  .description('deploy the specified contracts to specified chain')
   .option('--network [NETWORK]', 'Specify which network the contracts will be deployed')
   .option('--avm [AVM]', 'Specify which avm file will be deployed')
   .option('--wallet [WALLET]', 'Specify which wallet file will be used')
@@ -82,7 +81,7 @@ program
 
 program
   .command('invoke')
-  .description('Invoke the function list in default-config or specify config.')
+  .description('invoke the function list in default-config or specify config.')
   .option('--network [NETWORK]', 'Specify which network the contracts will be invoked')
   .option('--avm <AVM>', 'Specify which avm file will be deployed')
   .option('--wallet <WALLET>', 'Specify which wallet file will be used')
@@ -99,6 +98,22 @@ program
     console.log();
     console.log('Please go to Smartx for debugging smart contracts: \nhttp://smartx.ont.io/#/');
     console.log();
+  });
+
+program
+  .command('node')
+  .description('Ontology Blockchain private net in test mode')
+  .action((options) => {
+    console.log();
+    console.log('Please download from: \nhttps://github.com/punicasuite/solo-chain/releases');
+    console.log();
+  });
+
+program
+  .command('wallet')
+  .description('manage your ontid, account, asset.')
+  .action((options) => {
+    console.log('Unsupported');
   });
 
 program.parse(process.argv);

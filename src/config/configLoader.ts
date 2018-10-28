@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { Wallet } from 'ontology-ts-crypto';
 import * as path from 'path';
 import { DEFAULT_CONFIG } from '../consts';
 import {
@@ -8,7 +9,7 @@ import {
   walletFileError,
   walletFileUnspecified
 } from '../exception/punicaException';
-import { Config, Wallet } from './configTypes';
+import { Config } from './configTypes';
 
 // tslint:disable:no-console
 
@@ -117,7 +118,7 @@ export function loadWallet(projectDir: string, walletFileName?: string) {
 
   try {
     const f = fs.readFileSync(walletPath, 'utf8');
-    return JSON.parse(f) as Wallet;
+    return Wallet.deserializeJson(f);
   } catch (e) {
     throw walletFileError();
   }
@@ -129,7 +130,7 @@ export function loadAccount(wallet: Wallet, address?: string) {
   }
 
   for (const account of wallet.accounts) {
-    if (account.address === address) {
+    if (account.address.toBase58() === address) {
       return account;
     }
   }

@@ -1,16 +1,18 @@
 // import { randomBytes } from 'crypto';
 import * as fs from 'fs';
-import { Wallet } from 'ontology-ts-crypto';
+import { Account, PrivateKey, Wallet } from 'ontology-ts-crypto';
 import * as path from 'path';
-// import * as uuid from 'uuid';
+import * as uuid from 'uuid';
 import { walletFileError } from '../exception/punicaException';
 import { ensureDirExist } from '../utils/fileSystem';
-// import { inputNewPassword } from './walletCli';
+import { inputNewPassword } from './walletCli';
 
 // tslint:disable:object-literal-key-quotes
+// tslint:disable:no-console
 
 export class WalletManager {
   wallet: Wallet;
+  walletPath: string;
 
   init(projectDir: string, walletFileName?: string, create?: boolean) {
     if (walletFileName === undefined) {
@@ -29,6 +31,20 @@ export class WalletManager {
     } else {
       this.createWallet(walletPath);
     }
+  }
+
+  async add() {
+    console.log('Create account:');
+    const password = await inputNewPassword();
+
+    const account = Account.create(uuid(), PrivateKey.random(), password, this.wallet.scrypt);
+    this.wallet.addAccount(account);
+    this.saveWallet();
+  }
+
+  delete(address: string) {
+    this.wallet.delAccount(address);
+    this.saveWallet();
   }
 
   // async import(sk: string) {
@@ -69,6 +85,16 @@ export class WalletManager {
     try {
       const f = fs.readFileSync(walletPath, 'utf8');
       this.wallet = Wallet.deserializeJson(f);
+      this.walletPath = walletPath;
+    } catch (e) {
+      throw walletFileError();
+    }
+  }
+
+  private saveWallet() {
+    try {
+      const data = this.wallet.serializeJson(true);
+      fs.writeFileSync(this.walletPath, data, 'utf8');
     } catch (e) {
       throw walletFileError();
     }
@@ -78,6 +104,7 @@ export class WalletManager {
     try {
       this.wallet = Wallet.create();
       fs.writeFileSync(walletPath, 'utf8');
+      this.walletPath = walletPath;
     } catch (e) {
       throw walletFileError();
     }

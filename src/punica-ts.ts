@@ -127,14 +127,31 @@ accountCmd
   .command('add')
   .description('add account to wallet.json')
   .action((options) => {
-    console.log('add account');
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program, async () => {
+      const manager = new WalletManager();
+      manager.init(projectDir, options.wallet, true);
+      await manager.add();
+
+      console.log('Adding account successful.');
+    });
   });
 
 accountCmd
   .command('delete')
   .description('Delete account by address.')
-  .action(() => {
-    console.log('del account');
+  .option('--address <ADDRESS>', 'Specify address to delete')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program, async () => {
+      const manager = new WalletManager();
+      manager.init(projectDir, options.wallet, false);
+      manager.delete(options.address);
+
+      console.log('Deleting account successful.');
+    });
   });
 
 accountCmd

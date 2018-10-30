@@ -106,6 +106,22 @@ program
   });
 
 program
+  .command('list')
+  .description('list all the function in default-config or specified config.')
+  .option('--config <CONFIG>', 'Specify which config file will be used')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program, async () => {
+      const invoker = new Invoker();
+      const functions = await invoker.list(projectDir, options.config);
+
+      console.log('Functions:');
+      functions.forEach((func) => console.log(func));
+    });
+  });
+
+program
   .command('smartx')
   .description('Ontology smart contract IDE,SmartX (http://smartx.ont.io/)')
   .action((options) => {

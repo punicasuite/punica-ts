@@ -10,6 +10,10 @@ import { readAbi } from '../utils/fileSystem';
 // tslint:disable:no-console
 
 export class Invoker {
+  list(projectDir: string, configKey?: string) {
+    const invokeConfig = loadInvoke(projectDir, configKey);
+    return invokeConfig.functions.map((func) => func.name);
+  }
   async invoke(
     projectDir: string,
     execFuncStr?: string,

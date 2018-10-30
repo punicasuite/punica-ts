@@ -130,6 +130,8 @@ accountCmd
     const projectDir = getProjectDir(program);
 
     return wrapDebug(program, async () => {
+      console.log('Creating account...');
+
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, true);
       await manager.add();
@@ -157,8 +159,19 @@ accountCmd
 accountCmd
   .command('import')
   .description('Import account by private key.')
-  .action(() => {
-    console.log('import account');
+  .option('--privateKey <PRIVATE_KEY>', 'Specify private key to import in HEX format')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program, async () => {
+      console.log('Importing account...');
+
+      const manager = new WalletManager();
+      manager.init(projectDir, options.wallet, true);
+      await manager.import(options.privateKey);
+
+      console.log('Importing account successful.');
+    });
   });
 
 accountCmd

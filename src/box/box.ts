@@ -51,7 +51,13 @@ export class Box {
     console.log('Downloading...');
 
     if (fs.existsSync(repoToPath)) {
-      throw fileExistError();
+      if (fs.statSync(repoToPath).isDirectory()) {
+        if (fs.readdirSync(repoToPath).length > 0) {
+          throw fileExistError();
+        }
+      } else {
+        throw fileExistError();
+      }
     }
 
     try {

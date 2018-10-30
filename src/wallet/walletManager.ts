@@ -1,14 +1,10 @@
-// import { randomBytes } from 'crypto';
 import * as fs from 'fs';
 import { Account, PrivateKey, Wallet } from 'ontology-ts-crypto';
 import * as path from 'path';
 import * as uuid from 'uuid';
-import { walletFileError } from '../exception/punicaException';
+import { otherError, walletFileError } from '../exception/punicaException';
 import { ensureDirExist } from '../utils/fileSystem';
-import { inputNewPassword } from './walletCli';
-
-// tslint:disable:object-literal-key-quotes
-// tslint:disable:no-console
+import { inputExistingPassword, inputNewPassword } from './walletCli';
 
 export class WalletManager {
   wallet: Wallet;
@@ -34,7 +30,6 @@ export class WalletManager {
   }
 
   async add() {
-    console.log('Create account:');
     const password = await inputNewPassword();
 
     const account = Account.create(uuid(), PrivateKey.random(), password, this.wallet.scrypt);
@@ -42,37 +37,28 @@ export class WalletManager {
     this.saveWallet();
   }
 
-  delete(address: string) {
+  async delete(address: string) {
+    const password = await inputExistingPassword();
+
+    const account = this.wallet.getAccount(address);
+    if (account === undefined) {
+      throw otherError(`Account with address ${address} does not exist.`);
+    }
+
+    // try to decrypt
+    await account.decryptKey(password);
+
     this.wallet.delAccount(address);
     this.saveWallet();
   }
 
-  // async import(sk: string) {
-  //   const password = await inputNewPassword();
+  async import(sk: string) {
+    const password = await inputNewPassword();
 
-  //   const privateKey = new PrivateKey(sk);
-  //   const publicKey = privateKey.getPublicKey();
-  //   const address = Address.fromPubKey(publicKey);
-
-  //   const salt = randomBytes(16);
-
-  //   const account: Account = {
-  //     address: address.toBase58(),
-  //     label: uuid(),
-  //     lock: false,
-  //     algorithm: 'ECDSA',
-  //     parameters: { curve: 'P-256' },
-  //     key: encryptWithGcm(sk, address, salt, password, this.wallet.scrypt),
-  //     'enc-alg': 'aes-256-gcm',
-  //     salt: salt.toString('base64'),
-  //     isDefault: false,
-  //     publicKey: publicKey.key.toString('hex'),
-  //     signatureScheme: 'SHA256withECDSA'
-  //   };
-
-  //   this.wallet.accounts.push(account);
-  // }
-
+    const account = Account.import(uuid(), new PrivateKey(sk), password, undefined, this.wallet.scrypt);
+    this.wallet.addAccount(account);
+    this.saveWallet();
+  }
   list() {
     if (this.wallet.accounts !== undefined) {
       return this.wallet.accounts.map((a) => a.address.toBase58());

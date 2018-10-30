@@ -11,3 +11,7 @@ export async function inputNewPassword() {
     return password;
   }
 }
+
+export async function inputExistingPassword() {
+  return await questionAsync('Please input account password: ');
+}

@@ -8,7 +8,7 @@ import { ensureRemoveDirIfExists, removeFileIfExists } from '../utils/fileSystem
 
 export class Box {
   async init(initToPath: string) {
-    const repoUrl = 'https://github.com/punica-box/punica-init-default-box';
+    const repoUrl = 'https://github.com/punica-box/punica-init-default-box.git';
     await this.gitClone(repoUrl, initToPath);
     this.handleIgnorance(initToPath);
 
@@ -18,8 +18,12 @@ export class Box {
   async handleIgnorance(repoToPath: string = '') {
     console.log('Unpacking...');
 
-    const boxIgnoreFilePath = path.join(repoToPath, 'punica-config.json');
+    const boxIgnoreFilePath = path.join(repoToPath, 'punica-box.json');
     let boxIgnoreFiles: string[] | undefined;
+
+    if (!fs.existsSync(boxIgnoreFilePath)) {
+      return;
+    }
 
     try {
       const f = fs.readFileSync(boxIgnoreFilePath);

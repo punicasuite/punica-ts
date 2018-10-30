@@ -86,7 +86,7 @@ export class Invoker {
 
       const invokeParams = invokeInfo.params !== undefined ? invokeInfo.params : [];
 
-      console.log(`Invoking ${functionName}`);
+      console.log(`Invoking ${functionName}...`);
 
       if (abiInfo.parameters.length !== Object.keys(invokeParams).length) {
         console.warn(`Invoke failed, params mismatch between config and ABI file.`);
@@ -105,7 +105,18 @@ export class Invoker {
           gasPrice: String(invokeConfig.gasPrice),
           preExec: true
         });
-        console.log('response', response);
+
+        const result = response.result;
+        if (result !== undefined) {
+          const inner = result.Result;
+
+          if (inner !== undefined) {
+            console.log('Invocation was successful. Result:', inner);
+            continue;
+          }
+        }
+
+        console.warn('Invocation failed.');
       } else {
         const payer: string = invokeInfo.payer !== undefined ? invokeInfo.payer : defaultPayer;
 
@@ -118,6 +129,8 @@ export class Invoker {
           password = defaultPassword;
         }
 
+        // fixme: signers are not supported yet
+
         const response = await invoke({
           client,
           account,
@@ -125,10 +138,17 @@ export class Invoker {
           contract: contractAddress,
           method: abiInfo.name,
           parameters,
+          wait: false,
           gasLimit: String(invokeConfig.gasLimit),
           gasPrice: String(invokeConfig.gasPrice)
         });
-        console.log('response', response);
+
+        const result = response.result;
+        if (result !== '') {
+          console.log(`Invocation was successful. Transaction: ${result}.`);
+        } else {
+          console.warn(`Invocation failed. Error: ${result}.`);
+        }
       }
     }
   }

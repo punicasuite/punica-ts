@@ -12,6 +12,6 @@ export async function inputNewPassword() {
   }
 }
 
-export async function inputExistingPassword() {
-  return await questionAsync('Please input account password: ');
+export async function inputExistingPassword(msg = 'Please input account password: ') {
+  return await questionAsync(msg);
 }

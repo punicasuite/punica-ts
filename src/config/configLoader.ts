@@ -13,7 +13,7 @@ import { Config } from './configTypes';
 
 // tslint:disable:no-console
 
-export function loadConfig(configFilePath: string) {
+export function loadConfigFile(configFilePath: string) {
   try {
     const f = fs.readFileSync(configFilePath);
     return JSON.parse(f.toString()) as Config;
@@ -25,15 +25,15 @@ export function loadConfig(configFilePath: string) {
 export function loadNetwork(configDirPath: string, networkKey?: string, debug?: boolean) {
   const configFilePath = path.join(configDirPath, 'punica-config.json');
 
-  const config = loadConfig(configFilePath);
+  const config = loadConfigFile(configFilePath);
 
   try {
     if (networkKey === undefined) {
       if (config.defaultNet !== undefined) {
         networkKey = config.defaultNet;
+      } else {
+        throw otherError('No network specified');
       }
-
-      networkKey = Object.keys(config.networks)[0];
     }
   } catch (e) {
     throw configFileError();
@@ -57,7 +57,7 @@ export function loadNetwork(configDirPath: string, networkKey?: string, debug?: 
   }
 }
 
-export function loadDeploy(projectDir: string, configDir?: string) {
+export function loadConfig(projectDir: string, configDir?: string) {
   let configPath: string;
 
   if (configDir !== undefined) {
@@ -81,7 +81,11 @@ export function loadDeploy(projectDir: string, configDir?: string) {
     throw otherError(`${configPath} does not exist`);
   }
 
-  const config = loadConfig(configPath);
+  return loadConfigFile(configPath);
+}
+
+export function loadDeploy(projectDir: string, configDir?: string) {
+  const config = loadConfig(projectDir, configDir);
 
   let deployInformation = config.deployInformation;
   if (deployInformation === undefined || typeof deployInformation !== 'object') {
@@ -93,6 +97,17 @@ export function loadDeploy(projectDir: string, configDir?: string) {
   }
 
   return deployInformation;
+}
+
+export function loadInvoke(projectDir: string, configDir?: string) {
+  const config = loadConfig(projectDir, configDir);
+
+  const invokeConfig = config.invokeConfig;
+  if (invokeConfig === undefined || typeof invokeConfig !== 'object') {
+    throw configFileError();
+  }
+
+  return invokeConfig;
 }
 
 export function loadWallet(projectDir: string, walletFileName?: string) {

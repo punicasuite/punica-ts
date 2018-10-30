@@ -3,8 +3,8 @@ import { Address } from 'ontology-ts-crypto';
 import { deploy, initClient, isDeployed, reverseBuffer } from 'ontology-ts-test';
 import * as path from 'path';
 import { loadAccount, loadDeploy, loadNetwork, loadWallet } from '../config/configLoader';
-import { questionAsync } from '../utils/async';
 import { readAvm } from '../utils/fileSystem';
+import { inputExistingPassword } from '../wallet/walletCli';
 
 // tslint:disable:no-console
 
@@ -46,7 +46,7 @@ export class Deployer {
 
     const client = initClient({ rpcAddress });
 
-    const password = await questionAsync('Please input payer account password: ');
+    const password = await inputExistingPassword('Please input payer account password: ');
 
     console.log(`Running deployment: ${avmFileName}`);
 

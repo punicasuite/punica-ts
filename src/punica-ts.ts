@@ -11,6 +11,7 @@ import * as process from 'process';
 import { Box } from './box/box';
 import { Compiler } from './compile/compiler';
 import { Deployer } from './deploy/deployer';
+import { Invoker } from './invoke/invoker';
 import { checkRequiredOption, getProjectDir, wrapDebug } from './utils/cliUtils';
 import { CommandEx, patchCommander } from './utils/patchCommander';
 import { WalletManager } from './wallet/walletManager';
@@ -89,12 +90,18 @@ program
   .command('invoke')
   .description('invoke the function list in default-config or specify config.')
   .option('--network [NETWORK]', 'Specify which network the contracts will be invoked')
-  .option('--avm <AVM>', 'Specify which avm file will be deployed')
   .option('--wallet <WALLET>', 'Specify which wallet file will be used')
   .option('--functions <FUNCTIONS>', 'Specify which function will be executed')
   .option('--config <CONFIG>', 'Specify which config file will be used')
   .action((options) => {
-    console.log('invoking');
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program, async () => {
+      console.log('Invoking...');
+
+      const invoker = new Invoker();
+      await invoker.invoke(projectDir, options.functions, options.network, options.wallet, options.config);
+    });
   });
 
 program

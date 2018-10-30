@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { Abi } from '../config/configTypes';
 import { avmFileEmpty, directoryError, otherError } from '../exception/punicaException';
 
 export function removeFileIfExists(p: fs.PathLike) {
@@ -67,6 +68,20 @@ export function readAvm(avmDirPath: string, avmFileName?: string): [Buffer, stri
 
     throw avmFileEmpty();
   }
+}
+
+export function readAbi(abiDirPath: string, abiFileName: string) {
+  if (!fs.statSync(abiDirPath).isDirectory()) {
+    throw otherError('Build folder does not exist, please compile first.');
+  }
+
+  const abiFilePath = path.join(abiDirPath, abiFileName);
+  if (!fs.existsSync(abiFilePath)) {
+    throw otherError('ABI confi file does not exist');
+  }
+
+  const f = fs.readFileSync(abiFilePath, 'utf8');
+  return JSON.parse(f) as Abi;
 }
 
 function readAvmInternal(p: string) {

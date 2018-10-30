@@ -1,5 +1,6 @@
 export interface Config {
   networks: Networks;
+  defaultNet?: string;
   deployInformation: DeployInformation;
 }
 

@@ -25,32 +25,35 @@ export function loadConfig(configFilePath: string) {
 export function loadNetwork(configDirPath: string, networkKey?: string, debug?: boolean) {
   const configFilePath = path.join(configDirPath, 'punica-config.json');
 
+  const config = loadConfig(configFilePath);
+
   try {
-    const config = loadConfig(configFilePath);
-
-    try {
-      if (networkKey === undefined) {
-        networkKey = Object.keys(config.networks)[0];
-      }
-    } catch (e) {
-      throw configFileError();
-    }
-
-    try {
-      const network = config.networks[networkKey];
-      const address = `${network.host}:${network.port}`;
-
-      if (debug) {
-        console.log(`Using network '${network}'.`);
+    if (networkKey === undefined) {
+      if (config.defaultNet !== undefined) {
+        networkKey = config.defaultNet;
       }
 
-      return address;
-    } catch (e) {
-      throw configFileError();
+      networkKey = Object.keys(config.networks)[0];
     }
   } catch (e) {
-    console.log('No punica-config.json config found. Using TEST-NET');
-    return 'http://polaris1.ont.io:20336';
+    throw configFileError();
+  }
+
+  try {
+    const network = config.networks[networkKey];
+    const address = `${network.host}:${network.port}`;
+
+    if (network === undefined) {
+      throw otherError(`There is no network called ${networkKey} in config file.`);
+    }
+
+    if (debug) {
+      console.log(`Using network '${network}'.`);
+    }
+
+    return address;
+  } catch (e) {
+    throw configFileError();
   }
 }
 

@@ -14,6 +14,7 @@ import { Deployer } from './deploy/deployer';
 import { Invoker } from './invoke/invoker';
 import { checkRequiredOption, getProjectDir, wrapDebug } from './utils/cliUtils';
 import { CommandEx, patchCommander } from './utils/patchCommander';
+import { version } from './utils/version';
 import { WalletManager } from './wallet/walletManager';
 
 patchCommander(program);
@@ -23,7 +24,7 @@ git.plugins.set('fs', fs);
 program
   .name('punica-ts')
   .description('Punica CLI - The Ontology Blockchain dApp development framework')
-  .version('0.1.0', '-v, --version')
+  .version(version, '-v, --version')
   .option('-p, --project [PATH]', 'specify a punica project directory')
   .option('-d, --debug', 'print exceptions');
 

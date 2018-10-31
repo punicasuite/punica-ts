@@ -99,6 +99,18 @@ export function loadDeploy(projectDir: string, configDir?: string) {
   return deployInformation;
 }
 
+export function loadPassword(projectDir: string, configDir: string | undefined, address: string) {
+  const config = loadConfig(projectDir, configDir);
+
+  const passwords = config.password;
+
+  if (passwords !== undefined && typeof passwords === 'object') {
+    return passwords[address];
+  }
+
+  return undefined;
+}
+
 export function loadInvoke(projectDir: string, configDir?: string) {
   const config = loadConfig(projectDir, configDir);
 

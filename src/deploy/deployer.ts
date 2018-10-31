@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import { Address } from 'ontology-ts-crypto';
 import { deploy, initClient, isDeployed, reverseBuffer } from 'ontology-ts-test';
 import * as path from 'path';
-import { loadAccount, loadDeploy, loadNetwork, loadWallet } from '../config/configLoader';
+import { loadAccount, loadDeploy, loadNetwork, loadPassword, loadWallet } from '../config/configLoader';
+import { otherError } from '../exception/punicaException';
 import { readAvm } from '../utils/fileSystem';
 import { inputExistingPassword } from '../wallet/walletCli';
 
@@ -33,20 +34,19 @@ export class Deployer {
 
     if (!fs.existsSync(avmDirPath)) {
       // tslint:disable-next-line:no-console
-      console.warn(avmDirPath, 'not exist');
+      throw otherError(`${avmDirPath} does not exist.`);
     }
 
     const rpcAddress: string = loadNetwork(projectDir, networkKey);
     const deployInfo = loadDeploy(projectDir, configKey);
     const wallet = loadWallet(projectDir, walletFileName);
     const account = loadAccount(wallet, deployInfo.payer);
+    const configPassword = loadPassword(projectDir, configKey, account.address.toBase58());
 
     let avm: Buffer;
     [avm, avmFileName] = readAvm(avmDirPath, avmFileName);
 
     const client = initClient({ rpcAddress });
-
-    const password = await inputExistingPassword('Please input payer account password: ');
 
     console.log(`Running deployment: ${avmFileName}`);
 
@@ -58,6 +58,17 @@ export class Deployer {
       console.log(`Contract is already deployed at 0x${contractAddress}`);
       return;
     }
+
+    let password: string;
+
+    if (configPassword !== undefined) {
+      password = configPassword;
+    } else {
+      password = await inputExistingPassword('Please input payer account password: ');
+    }
+
+    // try the password
+    await account.decryptKey(password);
 
     await deploy({
       client,

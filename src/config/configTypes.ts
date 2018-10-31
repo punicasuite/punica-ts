@@ -3,6 +3,11 @@ export interface Config {
   defaultNet?: string;
   deployInformation: DeployInformation;
   invokeConfig: InvokeConfig;
+  password?: Passwords;
+}
+
+export interface Passwords {
+  [key: string]: string;
 }
 
 export interface Networks {

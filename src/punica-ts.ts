@@ -32,7 +32,7 @@ program
   .command('init')
   .description('initialize new and empty Ontology DApp project')
   .action(() => {
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       const box = new Box();
       return box.init(getProjectDir(program));
     });
@@ -46,7 +46,7 @@ program
     const boxName: string = options.box_name;
     checkRequiredOption('box_name', boxName);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       const box = new Box();
       return box.unbox(boxName, getProjectDir(program));
     });
@@ -59,7 +59,7 @@ program
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       console.log('Compiling...');
 
       const compiler = new Compiler();
@@ -79,7 +79,7 @@ program
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       console.log('Deploying...');
 
       const deployer = new Deployer();
@@ -97,11 +97,18 @@ program
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       console.log('Invoking...');
 
       const invoker = new Invoker();
-      await invoker.invoke(projectDir, options.functions, options.network, options.wallet, options.config);
+      await invoker.invoke(
+        projectDir,
+        options.functions,
+        options.network,
+        options.wallet,
+        options.config,
+        program.debug
+      );
     });
   });
 
@@ -112,7 +119,7 @@ program
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       const invoker = new Invoker();
       const functions = await invoker.list(projectDir, options.config);
 
@@ -153,7 +160,7 @@ accountCmd
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       console.log('Creating account...');
 
       const manager = new WalletManager();
@@ -171,7 +178,7 @@ accountCmd
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, false);
       manager.delete(options.address);
@@ -187,7 +194,7 @@ accountCmd
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       console.log('Importing account...');
 
       const manager = new WalletManager();
@@ -205,7 +212,7 @@ accountCmd
   .action((options) => {
     const projectDir = getProjectDir(program);
 
-    return wrapDebug(program, async () => {
+    return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet);
       const accounts = manager.list();

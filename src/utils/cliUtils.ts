@@ -19,9 +19,9 @@ export function checkRequiredOption(name: string, value: any) {
   }
 }
 
-export function wrapDebug(program: CommanderStatic, func: () => Promise<void>) {
+export function wrapDebug(debug: boolean | undefined, func: () => Promise<void>) {
   return func().catch((reason) => {
-    if (program.debug) {
+    if (debug) {
       console.error(reason);
     } else {
       console.error(`Error: ${reason.message}.`);

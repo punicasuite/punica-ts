@@ -3,6 +3,7 @@
 // tslint:disable:no-console
 
 import 'babel-polyfill';
+import 'source-map-support/register';
 
 import * as program from 'commander';
 import * as fs from 'fs';

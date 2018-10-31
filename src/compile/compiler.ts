@@ -91,7 +91,7 @@ export class Compiler {
     ensureDirExist(path.parse(avmSavePath).dir);
     ensureDirExist(path.parse(abiSavePath).dir);
 
-    fs.writeFileSync('./' + avmSavePath, result.avm.toString('hex'));
-    fs.writeFileSync('./' + abiSavePath, result.abi);
+    fs.writeFileSync(avmSavePath, result.avm.toString('hex'));
+    fs.writeFileSync(abiSavePath, result.abi);
   }
 }

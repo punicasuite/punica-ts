@@ -18,6 +18,10 @@ import { CommandEx, patchCommander } from './utils/patchCommander';
 import { version } from './utils/version';
 import { WalletManager } from './wallet/walletManager';
 
+import { scryptSync } from 'crypto';
+
+console.log('scrypt:', scryptSync);
+
 patchCommander(program);
 
 git.plugins.set('fs', fs);

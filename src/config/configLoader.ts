@@ -47,9 +47,7 @@ export function loadNetwork(configDirPath: string, networkKey?: string, debug?: 
       throw otherError(`There is no network called ${networkKey} in config file.`);
     }
 
-    if (debug) {
-      console.log(`Using network '${network}'.`);
-    }
+    console.log(`Using network '${networkKey}'.`);
 
     return address;
   } catch (e) {

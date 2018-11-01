@@ -1,12 +1,12 @@
 import { initClient, invoke, isDeployed } from 'ontology-ts-test';
 import * as path from 'path';
-import { isArray } from 'util';
 import { loadAccount, loadInvoke, loadNetwork, loadPassword, loadWallet } from '../config/configLoader';
-import { AbiFunction, Params, ScFunction } from '../config/configTypes';
+import { AbiFunction, ScFunction } from '../config/configTypes';
 import { abiFileError, configFileError, otherError } from '../exception/punicaException';
 import { questionAsync } from '../utils/async';
 import { wrapDebug } from '../utils/cliUtils';
 import { readAbi } from '../utils/fileSystem';
+import { convertParams } from '../utils/params';
 
 // tslint:disable:no-console
 
@@ -25,7 +25,7 @@ export class Invoker {
   ) {
     const rpcAddress = loadNetwork(projectDir, networkKey);
     const invokeConfig = loadInvoke(projectDir, configKey);
-    const wallet = loadWallet(projectDir, walletFileName);
+    const [wallet] = loadWallet(projectDir, walletFileName);
 
     const client = initClient({ rpcAddress });
 
@@ -103,7 +103,7 @@ export class Invoker {
           throw otherError(`Invoke failed, params mismatch between config and ABI file.`);
         }
 
-        const parameters = this.convertParams(invokeParams, abiInfo);
+        const parameters = convertParams(invokeParams, abiInfo);
 
         if (invokeInfo.preExec) {
           const response = await invoke({
@@ -172,35 +172,5 @@ export class Invoker {
         }
       });
     }
-  }
-
-  convertParam(param: any): any {
-    if (typeof param === 'boolean') {
-      return param;
-    } else if (typeof param === 'number') {
-      return param;
-    } else if (typeof param === 'string') {
-      if (param.startsWith('ByteArray:')) {
-        return new Buffer(param.substr('ByteArray:'.length));
-      } else {
-        // string parameters are more likely hex encoded
-        return new Buffer(param, 'hex');
-      }
-    } else if (isArray(param)) {
-      return param.map((child) => this.convertParam(child));
-    } else {
-      throw new Error('Unsupported param type');
-    }
-  }
-
-  convertParams(invokeParams: Params, abiInfo: AbiFunction) {
-    return abiInfo.parameters.map((abiParameter) => {
-      const invokeParameter = invokeParams[abiParameter.name];
-      if (invokeParameter === undefined) {
-        throw new Error('Missing parameter value.');
-      }
-
-      return this.convertParam(invokeParameter);
-    });
   }
 }

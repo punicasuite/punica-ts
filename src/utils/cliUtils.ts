@@ -1,4 +1,5 @@
 import { CommanderStatic } from 'commander';
+import * as path from 'path';
 
 // tslint:disable:no-console
 
@@ -7,6 +8,10 @@ export function getProjectDir(program: CommanderStatic) {
 
   if (projectDir === undefined) {
     projectDir = process.cwd();
+  }
+
+  if (!path.isAbsolute(projectDir)) {
+    projectDir = path.join(process.cwd(), projectDir);
   }
 
   return projectDir;

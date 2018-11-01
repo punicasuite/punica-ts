@@ -13,6 +13,7 @@ import { Box } from './box/box';
 import { Compiler } from './compile/compiler';
 import { Deployer } from './deploy/deployer';
 import { Invoker } from './invoke/invoker';
+import { Tester } from './test/tester';
 import { checkRequiredOption, getProjectDir, wrapDebug } from './utils/cliUtils';
 import { CommandEx, patchCommander } from './utils/patchCommander';
 import { version } from './utils/version';
@@ -42,7 +43,7 @@ program
 program
   .command('unbox')
   .description('download a Punica Box, a pre-built Ontology DApp project.')
-  .option('--box_name <BOX_NAME>', 'Specify which box to unbox')
+  .option('--box_name <BOX_NAME>', 'specify which box to unbox')
   .action((options) => {
     const boxName: string = options.box_name;
     checkRequiredOption('box_name', boxName);
@@ -56,7 +57,7 @@ program
 program
   .command('compile')
   .description('compile the specified contracts to avm and abi files')
-  .option('--contracts [CONTRACTS]', 'Specify contracts files in contracts dir')
+  .option('--contracts [CONTRACTS]', 'specify contracts files in contracts dir')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
@@ -73,10 +74,10 @@ program
 program
   .command('deploy')
   .description('deploy the specified contracts to specified chain')
-  .option('--network [NETWORK]', 'Specify which network the contracts will be deployed to')
-  .option('--avm [AVM]', 'Specify which avm file will be deployed')
-  .option('--wallet [WALLET]', 'Specify which wallet file will be used')
-  .option('--config [CONFIG]', 'Specify which deploy config file will be used')
+  .option('--network [NETWORK]', 'specify which network the contracts will be deployed to')
+  .option('--avm [AVM]', 'specify which avm file will be deployed')
+  .option('--wallet [WALLET]', 'specify which wallet file will be used')
+  .option('--config [CONFIG]', 'specify which deploy config file will be used')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
@@ -91,10 +92,10 @@ program
 program
   .command('invoke')
   .description('invoke the function list in default-config or specify config.')
-  .option('--network [NETWORK]', 'Specify which network the contracts will be invoked')
-  .option('--wallet <WALLET>', 'Specify which wallet file will be used')
-  .option('--functions <FUNCTIONS>', 'Specify which function will be executed')
-  .option('--config <CONFIG>', 'Specify which config file will be used')
+  .option('--network [NETWORK]', 'specify which network the contracts will be invoked')
+  .option('--wallet <WALLET>', 'specify which wallet file will be used')
+  .option('--functions <FUNCTIONS>', 'specify which function will be executed')
+  .option('--config <CONFIG>', 'specify which config file will be used')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
@@ -116,7 +117,7 @@ program
 program
   .command('list')
   .description('list all the function in default-config or specified config.')
-  .option('--config <CONFIG>', 'Specify which config file will be used')
+  .option('--config <CONFIG>', 'specify which config file will be used')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
@@ -147,12 +148,58 @@ program
     console.log();
   });
 
+const testCmd = program.command('test') as CommandEx;
+testCmd.description('Test Smart contracts.');
+testCmd.forwardSubcommands();
+
+testCmd
+  .command('template')
+  .description('generate test template file')
+  .option('--abi <ABI>', 'specify which abi file to be used')
+  .option('--config [CONFIG]', 'specify which config file will be used')
+  .option('--wallet <WALLET>', 'specify which wallet file will be used')
+  .action((options) => {
+    const abi: string = options.abi;
+    checkRequiredOption('abi', abi);
+
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program.debug, async () => {
+      console.log('Generating template from abi file...');
+
+      const tester = new Tester();
+      tester.template(projectDir, options.config, abi, options.wallet, program.debug);
+
+      console.log('Template ready.');
+    });
+  });
+
+testCmd
+  .command('exec')
+  .description('execute the test file')
+  .option('--file <FILE>', 'specify which test file to execute')
+  .action((options) => {
+    const file: string = options.file;
+    checkRequiredOption('file', file);
+
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program.debug, async () => {
+      console.log('Starting test...');
+
+      const tester = new Tester();
+      await tester.exec(__dirname, projectDir, file);
+
+      console.log('Test complete');
+    });
+  });
+
 const walletCmd = program.command('wallet') as CommandEx;
-walletCmd.description('manage your ontid, account, asset.');
+walletCmd.description('Manage your ontid, account, asset.');
 walletCmd.forwardSubcommands();
 
 const accountCmd = walletCmd.command('account') as CommandEx;
-accountCmd.description('manage your account');
+accountCmd.description('Manage your account');
 accountCmd.forwardSubcommands();
 
 accountCmd
@@ -175,7 +222,7 @@ accountCmd
 accountCmd
   .command('delete')
   .description('Delete account by address.')
-  .option('--address <ADDRESS>', 'Specify address to delete')
+  .option('--address <ADDRESS>', 'specify address to delete')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
@@ -191,7 +238,7 @@ accountCmd
 accountCmd
   .command('import')
   .description('Import account by private key.')
-  .option('--privateKey <PRIVATE_KEY>', 'Specify private key to import in HEX format')
+  .option('--privateKey <PRIVATE_KEY>', 'specify private key to import in HEX format')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
@@ -209,7 +256,7 @@ accountCmd
 accountCmd
   .command('list')
   .description('List all your account address.')
-  .option('--wallet [WALLET]', 'Specify which wallet file will be used')
+  .option('--wallet [WALLET]', 'specify which wallet file will be used')
   .action((options) => {
     const projectDir = getProjectDir(program);
 

@@ -120,7 +120,7 @@ export function loadInvoke(projectDir: string, configDir?: string) {
   return invokeConfig;
 }
 
-export function loadWallet(projectDir: string, walletFileName?: string) {
+export function loadWallet(projectDir: string, walletFileName?: string): [Wallet, string] {
   let walletPath: string;
 
   if (walletFileName === undefined) {
@@ -146,7 +146,7 @@ export function loadWallet(projectDir: string, walletFileName?: string) {
 
   try {
     const f = fs.readFileSync(walletPath, 'utf8');
-    return Wallet.deserializeJson(f);
+    return [Wallet.deserializeJson(f), walletPath];
   } catch (e) {
     throw walletFileError();
   }

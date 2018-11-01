@@ -1,6 +1,6 @@
 {
   "name": "punica-ts",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Punica CLI - The Ontology Blockchain dApp development framework",
   "bin": {
     "punica-ts": "./lib/punica-ts.js"
@@ -12,6 +12,11 @@
     "watch": "tsc -w"
   },
   "jest": {
+    "globals": {
+      "ts-jest": {
+        "diagnostics": false
+      }
+    },
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -21,7 +26,10 @@
       "\\.(ts|tsx)$": "ts-jest"
     },
     "testEnvironment": "node",
-    "testRegex": "/test/.*\\.test\\.(ts|tsx|js)$"
+    "testRegex": "/test/.*\\.test\\.(ts|tsx|js)$",
+    "moduleDirectories": [
+      "<rootDir>/node_modules"
+    ]
   },
   "author": "Matus Zamborsky <zamborsky@gmail.com>",
   "license": "LGPL3",
@@ -38,8 +46,6 @@
     "@types/node": "^10.0.0",
     "@types/uuid": "^3.4.4",
     "babel-polyfill": "^6.26.0",
-    "jest": "^23.4.2",
-    "jest-cli": "^23.6.0",
     "ts-jest": "^23.1.4",
     "tslint": "^5.10.0",
     "tslint-eslint-rules": "^5.3.1",
@@ -49,8 +55,10 @@
   "dependencies": {
     "commander": "^2.18.0",
     "isomorphic-git": "^0.37.3",
+    "jest": "^23.4.2",
+    "jest-cli": "^23.6.0",
     "ontology-ts-crypto": "^0.1.11",
-    "ontology-ts-test": "^0.2.5",
+    "ontology-ts-test": "^0.2.6",
     "source-map-support": "^0.5.9",
     "uuid": "^3.3.2"
   }

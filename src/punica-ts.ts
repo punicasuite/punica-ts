@@ -220,7 +220,7 @@ accountCmd
 
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, true);
-      await manager.add();
+      await manager.addAccount();
 
       console.log('Adding account successful.');
     });
@@ -236,7 +236,7 @@ accountCmd
     return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, false);
-      manager.delete(options.address);
+      manager.deleteAccount(options.address);
 
       console.log('Deleting account successful.');
     });
@@ -254,7 +254,7 @@ accountCmd
 
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, true);
-      await manager.import(options.privateKey);
+      await manager.importAccount(options.privateKey);
 
       console.log('Importing account successful.');
     });
@@ -270,10 +270,64 @@ accountCmd
     return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet);
-      const accounts = manager.list();
+      const accounts = manager.listAccounts();
 
       console.log('Accounts:');
       accounts.forEach((account) => console.log(account));
+    });
+  });
+
+const ontCmd = walletCmd.command('ontid') as CommandEx;
+ontCmd.description('manage your identity');
+ontCmd.forwardSubcommands();
+
+ontCmd
+  .command('add')
+  .description('add identity to wallet.json')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program.debug, async () => {
+      console.log('Creating identity...');
+
+      const manager = new WalletManager();
+      manager.init(projectDir, options.wallet, true);
+      await manager.addIdentity();
+
+      console.log('Adding account successful.');
+    });
+  });
+
+ontCmd
+  .command('delete')
+  .description('delete identity by ontid.')
+  .option('--address <ADDRESS>', 'specify ontid to delete')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program.debug, async () => {
+      const manager = new WalletManager();
+      manager.init(projectDir, options.wallet, false);
+      manager.deleteIdentity(options.address);
+
+      console.log('Deleting account successful.');
+    });
+  });
+
+ontCmd
+  .command('list')
+  .description('list all your identity ontids.')
+  .option('--wallet [WALLET]', 'specify which wallet file will be used')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program.debug, async () => {
+      const manager = new WalletManager();
+      manager.init(projectDir, options.wallet);
+      const accounts = manager.listIdentities();
+
+      console.log('Identities:');
+      accounts.forEach((identity) => console.log(identity));
     });
   });
 

@@ -158,7 +158,7 @@ contacts
     │      contract_abi.json
 ```
 
-For more usage, you can use `punica compile --help` command.
+For more usage, you can use `punica-ts compile --help` command.
 
 ```shell
 punica-ts compile --help

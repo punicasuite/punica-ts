@@ -132,24 +132,31 @@ program
 
 program
   .command('smartx')
-  .description('Ontology smart contract IDE,SmartX (http://smartx.ont.io/)')
-  .action((options) => {
+  .description('Ontology smart contract IDE - SmartX (http://smartx.ont.io/)')
+  .action(() => {
     console.log();
-    console.log('Please go to Smartx for debugging smart contracts: \nhttp://smartx.ont.io/#/');
+    console.log('Ontology smart contract IDE - SmartX.');
+    console.log('Please go to Smartx for debugging smart contracts: http://smartx.ont.io/#/');
     console.log();
   });
 
 program
   .command('node')
   .description('Ontology Blockchain private net in test mode')
-  .action((options) => {
+  .action(() => {
     console.log();
-    console.log('Please download from: \nhttps://github.com/punicasuite/solo-chain/releases');
+    console.log('Ontology Blockchain private net in test mode.');
+    console.log('Please download from: https://github.com/punicasuite/solo-chain/releases');
     console.log();
   });
 
+program
+  .command('scpm')
+  .description('smart contract package manager，support download and publish')
+  .action(() => true);
+
 const testCmd = program.command('test') as CommandEx;
-testCmd.description('Test Smart contracts.');
+testCmd.description('test Smart contracts');
 testCmd.forwardSubcommands();
 
 testCmd
@@ -195,11 +202,11 @@ testCmd
   });
 
 const walletCmd = program.command('wallet') as CommandEx;
-walletCmd.description('Manage your ontid, account, asset.');
+walletCmd.description('manage your ontid, account, asset');
 walletCmd.forwardSubcommands();
 
 const accountCmd = walletCmd.command('account') as CommandEx;
-accountCmd.description('Manage your account');
+accountCmd.description('manage your account');
 accountCmd.forwardSubcommands();
 
 accountCmd
@@ -221,7 +228,7 @@ accountCmd
 
 accountCmd
   .command('delete')
-  .description('Delete account by address.')
+  .description('delete account by address.')
   .option('--address <ADDRESS>', 'specify address to delete')
   .action((options) => {
     const projectDir = getProjectDir(program);
@@ -237,7 +244,7 @@ accountCmd
 
 accountCmd
   .command('import')
-  .description('Import account by private key.')
+  .description('import account by private key.')
   .option('--privateKey <PRIVATE_KEY>', 'specify private key to import in HEX format')
   .action((options) => {
     const projectDir = getProjectDir(program);
@@ -255,7 +262,7 @@ accountCmd
 
 accountCmd
   .command('list')
-  .description('List all your account address.')
+  .description('list all your account address.')
   .option('--wallet [WALLET]', 'specify which wallet file will be used')
   .action((options) => {
     const projectDir = getProjectDir(program);

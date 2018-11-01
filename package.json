@@ -57,8 +57,8 @@
     "isomorphic-git": "^0.37.3",
     "jest": "^23.4.2",
     "jest-cli": "^23.6.0",
-    "ontology-ts-crypto": "^0.1.15",
-    "ontology-ts-test": "^0.2.11",
+    "ontology-ts-crypto": "^0.1.17",
+    "ontology-ts-test": "^0.2.13",
     "source-map-support": "^0.5.9",
     "uuid": "^3.3.2"
   }

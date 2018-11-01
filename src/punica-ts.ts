@@ -324,10 +324,10 @@ ontCmd
     return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet);
-      const accounts = manager.listIdentities();
+      const identities = manager.listIdentities();
 
       console.log('Identities:');
-      accounts.forEach((identity) => console.log(identity));
+      identities.forEach((identity) => console.log(identity));
     });
   });
 

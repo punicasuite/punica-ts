@@ -9,6 +9,7 @@ import * as program from 'commander';
 import * as fs from 'fs';
 import * as git from 'isomorphic-git';
 import * as process from 'process';
+import { Assets } from './asset/assets';
 import { Box } from './box/box';
 import { Compiler } from './compile/compiler';
 import { Deployer } from './deploy/deployer';
@@ -209,6 +210,10 @@ const accountCmd = walletCmd.command('account') as CommandEx;
 accountCmd.description('manage your account');
 accountCmd.forwardSubcommands();
 
+const assetCmd = walletCmd.command('asset') as CommandEx;
+assetCmd.description('manager your asset, transfer, balance, withdraw ong, unbound ong');
+assetCmd.forwardSubcommands();
+
 accountCmd
   .command('add')
   .description('add account to wallet.json')
@@ -328,6 +333,85 @@ ontCmd
 
       console.log('Identities:');
       identities.forEach((identity) => console.log(identity));
+    });
+  });
+
+assetCmd
+  .command('transfer')
+  .description('transfer your asset to another address')
+  .option('--asset [ASSET]', 'asset of ONT or ONG (default: "ont")')
+  .option('--sender [SENDER]', 'transfer-out account')
+  .option('--to [TO]', 'transfer-in account')
+  .option('--amount [AMOUNT]', 'transfer amount')
+  .option('--gas_price [GAS_PRICE]', 'gas price of transaction (default: 0)')
+  .option('--gas_limit [GAS_LIMIT]', 'gas limit of the transaction (default: 20000)')
+  .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
+  .action((options) => {
+    return wrapDebug(program.debug, async () => {
+      const assets = new Assets();
+
+      await assets.transfer(
+        options.asset,
+        options.sender,
+        options.to,
+        options.amount,
+        options.gas_price,
+        options.gas_limit,
+        options.network
+      );
+    });
+  });
+
+assetCmd
+  .command('balanceOf')
+  .description('query balance of the address')
+  .option('--asset [ASSET]', 'asset of ONT or ONG (default: "ont")')
+  .option('--address [ADDRESS]', 'query balance of address')
+  .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    return wrapDebug(program.debug, async () => {
+      const assets = new Assets();
+
+      await assets.balanceOf(projectDir, options.asset, options.address, options.network);
+    });
+  });
+
+assetCmd
+  .command('withdrawOng')
+  .description('withdraw unbound ong')
+  .option('--claimer [CLAIMER]', 'transfer-out account')
+  .option('--to [TO]', 'transfer-in account')
+  .option('--amount [AMOUNT]', 'transfer amount')
+  .option('--gas_price [GAS_PRICE]', 'gas price of transaction (default: 0)')
+  .option('--gas_limit [GAS_LIMIT]', 'gas limit of the transaction (default: 20000)')
+  .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
+  .action((options) => {
+    return wrapDebug(program.debug, async () => {
+      const assets = new Assets();
+
+      await assets.withdrawOng(
+        options.claimer,
+        options.to,
+        options.amount,
+        options.gas_price,
+        options.gas_limit,
+        options.network
+      );
+    });
+  });
+
+assetCmd
+  .command('unboundOng')
+  .description('query unbound ong')
+  .option('--address [ADDRESS]', 'query unbound ong of address')
+  .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
+  .action((options) => {
+    return wrapDebug(program.debug, async () => {
+      const assets = new Assets();
+
+      await assets.unboundOng(options.address, options.network);
     });
   });
 

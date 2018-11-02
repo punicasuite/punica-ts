@@ -39,7 +39,7 @@ export class Deployer {
 
     const rpcAddress: string = loadNetwork(projectDir, networkKey);
     const deployInfo = loadDeploy(projectDir, configKey);
-    const wallet = loadWallet(projectDir, walletFileName);
+    const [wallet] = loadWallet(projectDir, walletFileName);
     const account = loadAccount(wallet, deployInfo.payer);
     const configPassword = loadPassword(projectDir, configKey, account.address.toBase58());
 

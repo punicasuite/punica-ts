@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { Account, PrivateKey, Wallet } from 'ontology-ts-crypto';
+import { Account, Identity, PrivateKey, Wallet } from 'ontology-ts-crypto';
 import * as path from 'path';
 import * as uuid from 'uuid';
 import { otherError, walletFileError } from '../exception/punicaException';
@@ -29,7 +29,7 @@ export class WalletManager {
     }
   }
 
-  async add() {
+  async addAccount() {
     const password = await inputNewPassword();
 
     const account = Account.create(uuid(), PrivateKey.random(), password, this.wallet.scrypt);
@@ -37,7 +37,7 @@ export class WalletManager {
     this.saveWallet();
   }
 
-  async delete(address: string) {
+  async deleteAccount(address: string) {
     const password = await inputExistingPassword();
 
     const account = this.wallet.getAccount(address);
@@ -52,16 +52,47 @@ export class WalletManager {
     this.saveWallet();
   }
 
-  async import(sk: string) {
+  async importAccount(sk: string) {
     const password = await inputNewPassword();
 
     const account = Account.import(uuid(), new PrivateKey(sk), password, undefined, this.wallet.scrypt);
     this.wallet.addAccount(account);
     this.saveWallet();
   }
-  list() {
+  listAccounts() {
     if (this.wallet.accounts !== undefined) {
       return this.wallet.accounts.map((a) => a.address.toBase58());
+    } else {
+      return [];
+    }
+  }
+
+  async addIdentity() {
+    const password = await inputNewPassword();
+
+    const identity = Identity.create(uuid(), PrivateKey.random(), password, this.wallet.scrypt);
+    this.wallet.addIdentity(identity);
+    this.saveWallet();
+  }
+
+  async deleteIdentity(ontid: string) {
+    const password = await inputExistingPassword();
+
+    const identity = this.wallet.getIdentity(ontid);
+    if (identity === undefined) {
+      throw otherError(`Identity with ontid ${ontid} does not exist.`);
+    }
+
+    // try to decrypt
+    await identity.decryptKey('1', password);
+
+    this.wallet.delIdentity(ontid);
+    this.saveWallet();
+  }
+
+  listIdentities() {
+    if (this.wallet.identities !== undefined) {
+      return this.wallet.identities.map((a) => a.ontid);
     } else {
       return [];
     }

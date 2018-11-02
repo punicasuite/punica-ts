@@ -340,21 +340,73 @@ assetCmd
   .command('transfer')
   .description('transfer your asset to another address')
   .option('--asset [ASSET]', 'asset of ONT or ONG (default: "ont")')
-  .option('--sender [SENDER]', 'transfer-out account')
-  .option('--to [TO]', 'transfer-in account')
-  .option('--amount [AMOUNT]', 'transfer amount')
+  .option('--sender <SENDER>', 'transfer-out account')
+  .option('--to <TO>', 'transfer-in account')
+  .option('--wallet [WALLET]', 'specify which wallet file will be used')
+  .option('--amount <AMOUNT>', 'transfer amount')
   .option('--gas_price [GAS_PRICE]', 'gas price of transaction (default: 0)')
   .option('--gas_limit [GAS_LIMIT]', 'gas limit of the transaction (default: 20000)')
   .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
   .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    const sender: string = options.sender;
+    checkRequiredOption('sender', sender);
+
+    const to: string = options.to;
+    checkRequiredOption('to', to);
+
+    const amount: string = options.amount;
+    checkRequiredOption('amount', amount);
+
     return wrapDebug(program.debug, async () => {
       const assets = new Assets();
 
       await assets.transfer(
+        projectDir,
         options.asset,
-        options.sender,
-        options.to,
-        options.amount,
+        sender,
+        to,
+        options.wallet,
+        amount,
+        options.gas_price,
+        options.gas_limit,
+        options.network
+      );
+    });
+  });
+
+assetCmd
+  .command('withdrawOng')
+  .description('withdraw unbound ong')
+  .option('--claimer <CLAIMER>', 'transfer-out account')
+  .option('--to <TO>', 'transfer-in account')
+  .option('--wallet [WALLET]', 'specify which wallet file will be used')
+  .option('--amount <AMOUNT>', 'transfer amount')
+  .option('--gas_price [GAS_PRICE]', 'gas price of transaction (default: 0)')
+  .option('--gas_limit [GAS_LIMIT]', 'gas limit of the transaction (default: 20000)')
+  .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
+  .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    const claimer: string = options.claimer;
+    checkRequiredOption('claimer', claimer);
+
+    const to: string = options.to;
+    checkRequiredOption('to', to);
+
+    const amount: string = options.amount;
+    checkRequiredOption('amount', amount);
+
+    return wrapDebug(program.debug, async () => {
+      const assets = new Assets();
+
+      await assets.withdrawOng(
+        projectDir,
+        claimer,
+        to,
+        options.wallet,
+        amount,
         options.gas_price,
         options.gas_limit,
         options.network
@@ -380,30 +432,6 @@ assetCmd
       const balance = await assets.balanceOf(projectDir, options.asset, address, options.network);
 
       console.log(`${address} Balance: ${balance}`);
-    });
-  });
-
-assetCmd
-  .command('withdrawOng')
-  .description('withdraw unbound ong')
-  .option('--claimer [CLAIMER]', 'transfer-out account')
-  .option('--to [TO]', 'transfer-in account')
-  .option('--amount [AMOUNT]', 'transfer amount')
-  .option('--gas_price [GAS_PRICE]', 'gas price of transaction (default: 0)')
-  .option('--gas_limit [GAS_LIMIT]', 'gas limit of the transaction (default: 20000)')
-  .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
-  .action((options) => {
-    return wrapDebug(program.debug, async () => {
-      const assets = new Assets();
-
-      await assets.withdrawOng(
-        options.claimer,
-        options.to,
-        options.amount,
-        options.gas_price,
-        options.gas_limit,
-        options.network
-      );
     });
   });
 

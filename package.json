@@ -1,6 +1,6 @@
 {
   "name": "punica-ts",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "Punica CLI - The Ontology Blockchain dApp development framework",
   "bin": {
     "punica-ts": "./lib/punica-ts.js"
@@ -53,12 +53,13 @@
     "typescript": "^3.1.0"
   },
   "dependencies": {
+    "bignumber.js": "^8.0.1",
     "commander": "^2.18.0",
     "isomorphic-git": "^0.37.3",
     "jest": "^23.4.2",
     "jest-cli": "^23.6.0",
     "ontology-ts-crypto": "^0.1.17",
-    "ontology-ts-test": "^0.2.14",
+    "ontology-ts-test": "^0.2.15",
     "source-map-support": "^0.5.9",
     "uuid": "^3.3.2"
   }

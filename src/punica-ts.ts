@@ -366,15 +366,20 @@ assetCmd
   .command('balanceOf')
   .description('query balance of the address')
   .option('--asset [ASSET]', 'asset of ONT or ONG (default: "ont")')
-  .option('--address [ADDRESS]', 'query balance of address')
+  .option('--address <ADDRESS>', 'query balance of address')
   .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
+    const address: string = options.address;
+    checkRequiredOption('address', address);
+
     return wrapDebug(program.debug, async () => {
       const assets = new Assets();
 
-      await assets.balanceOf(projectDir, options.asset, options.address, options.network);
+      const balance = await assets.balanceOf(projectDir, options.asset, address, options.network);
+
+      console.log(`${address} Balance: ${balance}`);
     });
   });
 
@@ -408,10 +413,17 @@ assetCmd
   .option('--address [ADDRESS]', 'query unbound ong of address')
   .option('--network [NETWORK]', 'specify which network will be used (default testNet)')
   .action((options) => {
+    const projectDir = getProjectDir(program);
+
+    const address: string = options.address;
+    checkRequiredOption('address', address);
+
     return wrapDebug(program.debug, async () => {
       const assets = new Assets();
 
-      await assets.unboundOng(options.address, options.network);
+      const balance = await assets.unboundOng(projectDir, options.address, options.network);
+
+      console.log(`${address} UnboundOng: ${balance}`);
     });
   });
 

@@ -97,8 +97,7 @@ export class Box {
         }
       }
 
-      console.log('Please check out your environment.');
-      return;
+      throw e;
     }
 
     try {

@@ -241,7 +241,7 @@ accountCmd
     return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, false);
-      manager.deleteAccount(options.address);
+      await manager.deleteAccount(options.address);
 
       console.log('Deleting account successful.');
     });
@@ -313,7 +313,7 @@ ontCmd
     return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, false);
-      manager.deleteIdentity(options.address);
+      await manager.deleteIdentity(options.address);
 
       console.log('Deleting account successful.');
     });

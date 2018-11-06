@@ -120,7 +120,7 @@ cd tutorialtoken
 - Download ("unbox") the MetaCoin box:
 
 ```shell
-punica-ts unbox tutorialtoken
+punica-ts unbox --box_name tutorialtoken
 ```
 
 ```shell

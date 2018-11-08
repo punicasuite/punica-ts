@@ -28,7 +28,7 @@ export function ensureRemoveDirIfExists(p: fs.PathLike) {
 export function ensureDirExist(p: fs.PathLike) {
   if (fs.existsSync(p)) {
     if (fs.statSync(p).isFile()) {
-      throw new Error(`Path ${path} is a file. Should be a directory.`);
+      throw new Error(`Path ${p} is a file. Should be a directory.`);
     }
   } else {
     fs.mkdirSync(p, { recursive: true });

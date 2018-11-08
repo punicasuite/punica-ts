@@ -44,14 +44,14 @@ program
 program
   .command('unbox')
   .description('download a Punica Box, a pre-built Ontology DApp project.')
-  .option('--box_name <BOX_NAME>', 'specify which box to unbox')
+  .option('--name <NAME>', 'specify which box to unbox')
   .action((options) => {
-    const boxName: string = options.box_name;
-    checkRequiredOption('box_name', boxName);
+    const name: string = options.name;
+    checkRequiredOption('name', name);
 
     return wrapDebug(program.debug, async () => {
       const box = new Box();
-      return box.unbox(boxName, getProjectDir(program));
+      return box.unbox(name, getProjectDir(program));
     });
   });
 
@@ -238,10 +238,13 @@ accountCmd
   .action((options) => {
     const projectDir = getProjectDir(program);
 
+    const address: string = options.address;
+    checkRequiredOption('address', address);
+
     return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, false);
-      await manager.deleteAccount(options.address);
+      await manager.deleteAccount(address);
 
       console.log('Deleting account successful.');
     });
@@ -306,16 +309,19 @@ ontCmd
 ontCmd
   .command('delete')
   .description('delete identity by ontid.')
-  .option('--address <ADDRESS>', 'specify ontid to delete')
+  .option('--ontid <ONTID>', 'specify ontid to delete')
   .action((options) => {
     const projectDir = getProjectDir(program);
+
+    const ontid: string = options.ontid;
+    checkRequiredOption('ontid', ontid);
 
     return wrapDebug(program.debug, async () => {
       const manager = new WalletManager();
       manager.init(projectDir, options.wallet, false);
-      await manager.deleteIdentity(options.address);
+      await manager.deleteIdentity(ontid);
 
-      console.log('Deleting account successful.');
+      console.log('Deleting identity successful.');
     });
   });
 

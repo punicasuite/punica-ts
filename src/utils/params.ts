@@ -58,6 +58,9 @@ export function convertParamStr(param: any): any {
       return `new Buffer('${param.substr('ByteArray:'.length)}')`;
     } else if (param.startsWith('String:')) {
       return `'${param.substr('String:'.length)}'`;
+    } else if (param.startsWith('Address:')) {
+      const address = Address.fromBase58(param.substr('Address:'.length));
+      return `new Buffer('${address.toArray().toString('hex')}', 'hex')`;
     } else {
       // string parameters are more likely hex encoded
       return `new Buffer('${param}', 'hex')`;

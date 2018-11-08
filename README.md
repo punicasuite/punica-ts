@@ -67,7 +67,7 @@ Commands:
 
 There are a few technical requirements before we start. Please install the following:
 
-- [Node.js 10](https://nodejs.org)
+- [Node.js 10.0.0](https://nodejs.org)
 
 ## 3. Install
 

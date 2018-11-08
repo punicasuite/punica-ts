@@ -18,7 +18,7 @@ export function patchCommander(commander: CommanderStatic) {
       unknown = parsed.unknown;
 
       // Output help if necessary
-      if (args.length === 0 && (unknown.includes('--help') || unknown.includes('-h'))) {
+      if (args.length === 0 && (unknown.includes('--help') || unknown.includes('-h') || unknown.length === 0)) {
         self.outputHelp();
         process.exit(0);
       }

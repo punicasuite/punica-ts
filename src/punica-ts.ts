@@ -308,7 +308,7 @@ ontCmd
 
 ontCmd
   .command('delete')
-  .description('delete identity by ontid.')
+  .description('delete identity by ontid')
   .option('--ontid <ONTID>', 'specify ontid to delete')
   .action((options) => {
     const projectDir = getProjectDir(program);
@@ -327,7 +327,7 @@ ontCmd
 
 ontCmd
   .command('list')
-  .description('list all your identity ontids.')
+  .description('list all your identity ontids')
   .option('--wallet [WALLET]', 'specify which wallet file will be used')
   .action((options) => {
     const projectDir = getProjectDir(program);

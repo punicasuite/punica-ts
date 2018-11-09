@@ -67,9 +67,37 @@ Commands:
 
 There are a few technical requirements before we start. Please install the following:
 
-- [Node.js 10](https://nodejs.org)
+- [Node.js 10.0.0] (https://nodejs.org)
+- [Npm] (https://www.npmjs.com) - installed with Node.js
 
-## 3. Install
+### Developing and Running
+
+Execute these commands in the project's root directory:
+
+#### Download
+```
+git clone 'https://github.com/OntologyCommunityDevelopers/punica-ts.git'
+cd punica-ts
+```
+
+#### Install dependencies
+
+```
+npm install
+```
+
+#### Build
+This will build the project with minimum polyfilling for better debug experience.
+
+````
+npm run build
+````
+
+You will get the packaged code under '/lib'.
+
+
+
+## 3. Global install without building
 
 ```shell
 npm install punica-ts -g
@@ -120,7 +148,7 @@ cd tutorialtoken
 - Download ("unbox") the MetaCoin box:
 
 ```shell
-punica-ts unbox tutorialtoken
+punica-ts unbox --box_name tutorialtoken
 ```
 
 ```shell

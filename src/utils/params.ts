@@ -1,3 +1,4 @@
+import { Address } from 'ontology-ts-crypto';
 import { isArray } from 'util';
 import { AbiFunction, Params } from '../config/configTypes';
 
@@ -22,6 +23,9 @@ export function convertParam(param: any): any {
       return new Buffer(param.substr('ByteArray:'.length));
     } else if (param.startsWith('String:')) {
       return param.substr('String:'.length);
+    } else if (param.startsWith('Address:')) {
+      const address = Address.fromBase58(param.substr('Address:'.length));
+      return address.toArray();
     } else {
       // string parameters are more likely hex encoded
       return new Buffer(param, 'hex');
@@ -54,6 +58,9 @@ export function convertParamStr(param: any): any {
       return `new Buffer('${param.substr('ByteArray:'.length)}')`;
     } else if (param.startsWith('String:')) {
       return `'${param.substr('String:'.length)}'`;
+    } else if (param.startsWith('Address:')) {
+      const address = Address.fromBase58(param.substr('Address:'.length));
+      return `new Buffer('${address.toArray().toString('hex')}', 'hex')`;
     } else {
       // string parameters are more likely hex encoded
       return `new Buffer('${param}', 'hex')`;

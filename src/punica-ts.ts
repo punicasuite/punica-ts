@@ -302,7 +302,7 @@ ontCmd
       manager.init(projectDir, options.wallet, true);
       await manager.addIdentity();
 
-      console.log('Adding account successful.');
+      console.log('Adding ontid successful.');
     });
   });
 

@@ -32,6 +32,11 @@ export function convertParam(param: any): any {
     }
   } else if (isArray(param)) {
     return param.map((child) => convertParam(child));
+  } else if (typeof param === 'object') {
+    // this is last, because other classes are also objects
+    const entries = Object.entries<any>(param);
+    const converted = entries.map(([key, value]): [string, any] => [key, convertParam(value)]);
+    return new Map(converted);
   } else {
     throw new Error('Unsupported param type');
   }

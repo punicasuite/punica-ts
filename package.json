@@ -35,12 +35,12 @@
   "license": "LGPL-3.0-or-later",
   "repository": {
     "type": "git",
-    "url": "git://github.com/OntologyCommunityDevelopers/punica-ts"
+    "url": "git://github.com/punicasuite/punica-ts"
   },
   "bugs": {
-    "url": "https://github.com/OntologyCommunityDevelopers/punica-ts/issues"
+    "url": "https://github.com/punicasuite/punica-ts/issues"
   },
-  "homepage": "https://github.com/OntologyCommunityDevelopers/punica-ts",
+  "homepage": "https://github.com/punicasuite/punica-ts",
   "devDependencies": {
     "@types/jest": "^23.3.1",
     "@types/node": "^10.0.0",

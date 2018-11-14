@@ -41,14 +41,14 @@ export interface InvokeConfig {
 }
 
 export interface ScFunction {
-  name: string;
-  params: Params;
+  operation: string;
+  args: Param[];
   signers: Signers;
   payer: string | undefined;
   preExec: boolean;
 }
 
-export interface Params {
+export interface Param {
   [key: string]: any;
 }
 

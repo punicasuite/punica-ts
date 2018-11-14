@@ -1,10 +1,21 @@
 import { Address } from 'ontology-ts-crypto';
 import { isArray } from 'util';
-import { AbiFunction, Params } from '../config/configTypes';
+import { AbiFunction, Param } from '../config/configTypes';
 
-export function convertParams(invokeParams: Params, abiInfo: AbiFunction) {
+function getParamName(param: Param) {
+  return Object.keys(param)[0];
+}
+
+function getParamValue(param: Param | undefined) {
+  if (param === undefined) {
+    return undefined;
+  }
+
+  return Object.values(param)[0];
+}
+export function convertParams(invokeParams: Param[], abiInfo: AbiFunction) {
   return abiInfo.parameters.map((abiParameter) => {
-    const invokeParameter = invokeParams[abiParameter.name];
+    const invokeParameter = getParamValue(invokeParams.find((ip) => getParamName(ip) === abiParameter.name));
     if (invokeParameter === undefined) {
       throw new Error('Missing parameter value.');
     }
@@ -42,9 +53,9 @@ export function convertParam(param: any): any {
   }
 }
 
-export function convertParamsStr(invokeParams: Params, abiInfo: AbiFunction) {
+export function convertParamsStr(invokeParams: Param[], abiInfo: AbiFunction) {
   return abiInfo.parameters.map((abiParameter) => {
-    const invokeParameter = invokeParams[abiParameter.name];
+    const invokeParameter = getParamValue(invokeParams.find((ip) => getParamName(ip) === abiParameter.name));
     if (invokeParameter === undefined) {
       throw new Error('Missing parameter value.');
     }

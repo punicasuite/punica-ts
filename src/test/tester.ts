@@ -86,7 +86,7 @@ export class Tester {
   ) {
     const invokeFunctions = new Map<string, ScFunction>();
     for (const func of invokeConfig.functions) {
-      invokeFunctions.set(func.name, func);
+      invokeFunctions.set(func.operation, func);
     }
 
     const abiFunctions = new Map<string, AbiFunction>();
@@ -110,7 +110,7 @@ export class Tester {
           throw otherError(`There is no function with name ${functionName} in the ABI file.`);
         }
 
-        const invokeParams = invokeInfo.params !== undefined ? invokeInfo.params : [];
+        const invokeParams = invokeInfo.args !== undefined ? invokeInfo.args : [];
 
         console.log(`Generating test for ${functionName}...`);
 

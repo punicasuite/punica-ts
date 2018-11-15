@@ -3,7 +3,7 @@ import { isArray } from 'util';
 import { AbiFunction, Param } from '../config/configTypes';
 
 function getParamName(param: Param) {
-  return Object.keys(param)[0];
+  return param.name;
 }
 
 function getParamValue(param: Param | undefined) {
@@ -11,7 +11,7 @@ function getParamValue(param: Param | undefined) {
     return undefined;
   }
 
-  return Object.values(param)[0];
+  return param.value;
 }
 export function convertParams(invokeParams: Param[], abiInfo: AbiFunction) {
   return abiInfo.parameters.map((abiParameter) => {

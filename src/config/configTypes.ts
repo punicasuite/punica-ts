@@ -49,7 +49,8 @@ export interface ScFunction {
 }
 
 export interface Param {
-  [key: string]: any;
+  name: string;
+  value: any;
 }
 
 export interface Signers {

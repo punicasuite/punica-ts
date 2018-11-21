@@ -31,7 +31,7 @@ export function convertParam(param: any): any {
     return param;
   } else if (typeof param === 'string') {
     if (param.startsWith('ByteArray:')) {
-      return new Buffer(param.substr('ByteArray:'.length));
+      return new Buffer(param.substr('ByteArray:'.length), 'hex');
     } else if (param.startsWith('String:')) {
       return param.substr('String:'.length);
     } else if (param.startsWith('Address:')) {
@@ -71,7 +71,7 @@ export function convertParamStr(param: any): any {
     return `${param}`;
   } else if (typeof param === 'string') {
     if (param.startsWith('ByteArray:')) {
-      return `new Buffer('${param.substr('ByteArray:'.length)}')`;
+      return `new Buffer('${param.substr('ByteArray:'.length)}', 'hex')`;
     } else if (param.startsWith('String:')) {
       return `'${param.substr('String:'.length)}'`;
     } else if (param.startsWith('Address:')) {

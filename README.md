@@ -61,6 +61,7 @@ Commands:
   node                  Ontology Blockchain private net in test mode
   test                  test Smart contracts
   wallet                manage your ontid, account, asset
+  tool                  tooling functions
 ```
 
 ## 2. Setting up the development environment
@@ -477,6 +478,43 @@ Commands:
   asset       manage your asset, transfer, balance,...
   ontid       manage your ont_id, list or add.
 
+```
+
+### 4.10  Tools
+
+```shell
+punica-ts tool -h
+Usage: tool [options] [command]
+
+tooling functions
+
+Options:
+  -h, --help                   output usage information
+
+Commands:
+  transform                    transform data
+  decryptprivatekey [options]  decrypt encoded private key
+  
+```
+
+### 4.10.1  Transformation tools
+
+```shell
+punica-ts tool transform -h
+Usage: transform [options] [command]
+
+transform data
+
+Options:
+  -h, --help              output usage information
+
+Commands:
+  addresstohex [options]  transform address to hex
+  stringtohex [options]   transform string to hex
+  hexreverse [options]    reverse hex string
+  numtohex [options]      transform number to NeoVM hex string
+  generateprivatekey      generate random private key
+  
 ```
 
 ## 5. Example

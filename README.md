@@ -441,7 +441,7 @@ smart contract package manager，support download and publish
 Options:
   -h, --help  output usage information
 ```
-### 4.7  Smartx
+### 4.7.  Smartx
 
 ```shell
 punica-ts smartx
@@ -449,7 +449,7 @@ punica-ts smartx
 Ontology smart contract IDE - SmartX.
 Please go to Smartx for debugging smart contracts: http://smartx.ont.io/#/
 ```
-### 4.8  Test
+### 4.8.  Test
 
 ```shell
 punica-ts test -h
@@ -464,7 +464,7 @@ Commands:
   template [options]  generate test template file
   exec [options]      execute the test file
 ```
-### 4.9  Wallet
+### 4.9.  Wallet
 
 ```shell
 punica-ts wallet -h
@@ -482,7 +482,7 @@ Commands:
 
 ```
 
-### 4.10  Tools
+### 4.10.  Tools
 
 ```shell
 punica-ts tool -h
@@ -499,7 +499,7 @@ Commands:
   
 ```
 
-### 4.10.1  Transformation tools
+### 4.10.1.  Transformation tools
 
 ```shell
 punica-ts tool transform -h

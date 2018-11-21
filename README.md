@@ -23,6 +23,8 @@
     - [4.7  Smartx](#47-smartx)
     - [4.8  Test](#48-test)
     - [4.9  Wallet](#49-wallet)
+    - [4.10  Tool](#410-tool)
+    	- [4.10.1  Transform tool](#4101-tool-transform)
 - [5. Example](#5-example)
     - [5.1. Checkout Version](#51-checkout-version)
     - [5.2. Unbox Tutorialtoken](#52-unbox-tutorialtoken)

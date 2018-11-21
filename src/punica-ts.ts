@@ -15,6 +15,7 @@ import { Compiler } from './compile/compiler';
 import { Deployer } from './deploy/deployer';
 import { Invoker } from './invoke/invoker';
 import { Tester } from './test/tester';
+import { Tooler } from './tool/tooler';
 import { checkRequiredOption, getProjectDir, wrapDebug } from './utils/cliUtils';
 import { CommandEx, patchCommander } from './utils/patchCommander';
 import { version } from './utils/version';
@@ -458,6 +459,124 @@ assetCmd
       const balance = await assets.unboundOng(projectDir, options.address, options.network);
 
       console.log(`${address} UnboundOng: ${balance}`);
+    });
+  });
+
+const toolCmd = program.command('tool') as CommandEx;
+toolCmd.description('tooling functions');
+toolCmd.forwardSubcommands();
+
+const transformCmd = toolCmd.command('transform') as CommandEx;
+transformCmd.description('transform data');
+transformCmd.forwardSubcommands();
+
+transformCmd
+  .command('addresstohex')
+  .description('transform address to hex')
+  .option('--input [INPUT]', 'address')
+  .action((options) => {
+    const input: string = options.input;
+    checkRequiredOption('input', input);
+
+    return wrapDebug(program.debug, async () => {
+      const tooler = new Tooler();
+
+      console.log('Result is:');
+      console.log(tooler.addressToHex(input));
+    });
+  });
+
+transformCmd
+  .command('stringtohex')
+  .description('transform string to hex')
+  .option('--input [INPUT]', 'arbitrary string')
+  .action((options) => {
+    const input: string = options.input;
+    checkRequiredOption('input', input);
+
+    return wrapDebug(program.debug, async () => {
+      const tooler = new Tooler();
+
+      console.log('Result is:');
+      console.log(tooler.str2hex(input));
+    });
+  });
+
+transformCmd
+  .command('hexreverse')
+  .description('reverse hex string')
+  .option('--input [INPUT]', 'arbitrary hex string')
+  .action((options) => {
+    const input: string = options.input;
+    checkRequiredOption('input', input);
+
+    return wrapDebug(program.debug, async () => {
+      const tooler = new Tooler();
+
+      console.log('Result is:');
+      console.log(tooler.hexReverse(input));
+    });
+  });
+
+transformCmd
+  .command('numtohex')
+  .description('transform number to NeoVM hex string')
+  .option('--input [INPUT]', 'arbitrary number')
+  .action((options) => {
+    const input: string = options.input;
+    checkRequiredOption('input', input);
+
+    return wrapDebug(program.debug, async () => {
+      const tooler = new Tooler();
+
+      console.log('Result is:');
+      console.log(tooler.num2hex(input));
+    });
+  });
+
+transformCmd
+  .command('generateprivatekey')
+  .description('generate random private key')
+  .action((options) => {
+    return wrapDebug(program.debug, async () => {
+      const tooler = new Tooler();
+
+      console.log('Result is:');
+      console.log(tooler.randomPrivateKey());
+    });
+  });
+
+toolCmd
+  .command('decryptprivatekey')
+  .description('decrypt encoded private key')
+  .option('--key [KEY]', 'ecnrypted private key')
+  .option('--address [ADDRESS]', 'address')
+  .option('--salt [SALT]', 'salt')
+  .option('--n [N]', 'SCrypt N parameter')
+  .option('--password [PASSWORD]', 'password')
+  .action((options) => {
+    const key: string = options.key;
+    checkRequiredOption('key', key);
+
+    const address: string = options.address;
+    checkRequiredOption('address', address);
+
+    const salt: string = options.salt;
+    checkRequiredOption('salt', salt);
+
+    const n: string = options.n;
+    checkRequiredOption('n', n);
+
+    const password: string = options.password;
+    checkRequiredOption('password', password);
+
+    return wrapDebug(program.debug, async () => {
+      const tooler = new Tooler();
+
+      const sk = await tooler.decryptPrivateKey(key, address, salt, n, password);
+
+      console.log('Result is:');
+      console.log(sk);
     });
   });
 

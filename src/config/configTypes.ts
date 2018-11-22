@@ -43,7 +43,7 @@ export interface InvokeConfig {
 export interface ScFunction {
   operation: string;
   args: Param[];
-  signers: Signers;
+  signature?: Signature;
   payer: string | undefined;
   preExec: boolean;
 }
@@ -53,9 +53,9 @@ export interface Param {
   value: any;
 }
 
-export interface Signers {
-  m: number;
-  signer: string[];
+export interface Signature {
+  m?: number;
+  signers?: string[];
 }
 
 export interface Abi {

@@ -1,4 +1,4 @@
-import { initClient, invoke, isDeployed } from 'ontology-ts-test';
+import { initClient, invoke, isDeployed, Signer } from 'ontology-ts-test';
 import * as path from 'path';
 import { loadAccount, loadInvoke, loadNetwork, loadPassword, loadWallet } from '../config/configLoader';
 import { AbiFunction, ScFunction } from '../config/configTypes';
@@ -149,12 +149,29 @@ export class Invoker {
             }
           }
 
-          // fixme: signers are not supported yet
+          // add additional signatures
+          let signers: Signer[] | undefined;
+          const signature = invokeInfo.signature;
+          if (signature !== undefined && signature.m !== undefined && signature.signers !== undefined) {
+            signers = [];
+
+            for (const signer of signature.signers) {
+              const signerAccount = loadAccount(wallet, signer);
+              let signerPassword = loadPassword(projectDir, configKey, signer);
+
+              if (signerPassword === undefined) {
+                signerPassword = await questionAsync(`Please input password for account ${signer} : `);
+              }
+
+              signers.push({ account: signerAccount, password: signerPassword });
+            }
+          }
 
           const response = await invoke({
             client,
             account,
             password,
+            signers,
             contract: contractAddress,
             method: abiInfo.name,
             parameters,

@@ -82,6 +82,8 @@ export class Invoker {
       allExecFuncs = Array.from(invokeFunctions.keys());
     }
 
+    const sleepTime = invokeConfig.sleepTime !== undefined ? invokeConfig.sleepTime * 1000 : 6000;
+
     for (const functionName of allExecFuncs) {
       wrapDebug(debug, async () => {
         const invokeInfo = invokeFunctions.get(functionName);
@@ -180,6 +182,8 @@ export class Invoker {
             gasPrice: String(invokeConfig.gasPrice)
           });
 
+          await sleep(sleepTime);
+
           const result = response.result;
           if (result !== '') {
             console.log(`Invocation was successful. Transaction: ${result}.`);
@@ -190,4 +194,8 @@ export class Invoker {
       });
     }
   }
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

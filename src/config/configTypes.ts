@@ -37,6 +37,7 @@ export interface InvokeConfig {
   defaultSigner: string;
   gasPrice: string | number;
   gasLimit: string | number;
+  sleepTime?: number;
   functions: ScFunction[];
 }
 

@@ -115,7 +115,8 @@ export class Invoker {
             parameters,
             gasLimit: String(invokeConfig.gasLimit),
             gasPrice: String(invokeConfig.gasPrice),
-            preExec: true
+            preExec: true,
+            debug
           });
 
           const result = response.result;

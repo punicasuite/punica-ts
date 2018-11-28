@@ -1,6 +1,6 @@
 {
   "name": "punica-ts",
-  "version": "0.2.33",
+  "version": "0.2.34",
   "description": "Punica CLI - The Ontology Blockchain dApp development framework",
   "bin": {
     "punica-ts": "./lib/punica-ts.js"
@@ -57,7 +57,7 @@
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0",
     "ontology-ts-crypto": "^0.1.24",
-    "ontology-ts-test": "^0.2.36",
+    "ontology-ts-test": "^0.2.37",
     "source-map-support": "^0.5.9",
     "ts-jest": "^23.1.4",
     "typescript": "^3.1.0",

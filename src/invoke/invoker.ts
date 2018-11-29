@@ -85,7 +85,7 @@ export class Invoker {
     const sleepTime = invokeConfig.sleepTime !== undefined ? invokeConfig.sleepTime * 1000 : 6000;
 
     for (const functionName of allExecFuncs) {
-      wrapDebug(debug, async () => {
+      await wrapDebug(debug, async () => {
         const invokeInfo = invokeFunctions.get(functionName);
 
         if (invokeInfo === undefined) {

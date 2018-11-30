@@ -44,7 +44,7 @@ program
 
 program
   .command('unbox')
-  .description('download a Punica Box, a pre-built Ontology DApp project.')
+  .description('download a Punica Box, a pre-built Ontology DApp project')
   .option('--name <NAME>', 'specify which box to unbox')
   .action((options) => {
     const name: string = options.name;
@@ -53,6 +53,21 @@ program
     return wrapDebug(program.debug, async () => {
       const box = new Box();
       return box.unbox(name, getProjectDir(program));
+    });
+  });
+
+program
+  .command('boxes')
+  .description('lost all available boxes')
+  .action(() => {
+    return wrapDebug(program.debug, async () => {
+      console.log('Looking for available boxes...');
+
+      const box = new Box();
+      const boxes = await box.list();
+
+      console.log('Boxes:');
+      boxes.forEach((b) => console.log(b));
     });
   });
 

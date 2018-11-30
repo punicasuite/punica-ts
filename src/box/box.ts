@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch';
 import * as fs from 'fs';
 import * as git from 'isomorphic-git';
 import * as path from 'path';
@@ -82,6 +83,17 @@ export class Box {
     } else {
       throw invalidBoxName();
     }
+  }
+
+  async list() {
+    const response = await fetch('https://api.github.com/orgs/punica-box/repos');
+    const json: any[] = await response.json();
+
+    return json
+      .map((repo) => repo.name)
+      .filter((name): name is string => name !== undefined)
+      .filter((name) => name.endsWith('-box'))
+      .map((name) => name.substr(0, name.length - '-box'.length));
   }
 
   async unbox(boxName: string, repoToPath: string = '') {

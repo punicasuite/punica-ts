@@ -58,7 +58,7 @@ program
 
 program
   .command('boxes')
-  .description('lost all available boxes')
+  .description('list all available boxes')
   .action(() => {
     return wrapDebug(program.debug, async () => {
       console.log('Looking for available boxes...');

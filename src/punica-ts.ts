@@ -75,6 +75,7 @@ program
   .command('compile')
   .description('compile the specified contracts to avm and abi files')
   .option('--contracts [CONTRACTS]', 'specify contracts files in contracts dir')
+  .option('--v2', 'use python 2.0 compiler')
   .action((options) => {
     const projectDir = getProjectDir(program);
 
@@ -82,7 +83,7 @@ program
       console.log('Compiling...');
 
       const compiler = new Compiler();
-      await compiler.compile(projectDir, options.contracts);
+      await compiler.compile(projectDir, options.contracts, options.v2);
 
       console.log('Compiled, Thank you.');
     });

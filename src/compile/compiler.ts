@@ -4,7 +4,7 @@ import * as path from 'path';
 import { ensureDirExist } from '../utils/fileSystem';
 
 export class Compiler {
-  async compile(projectDir: string, contracts?: string) {
+  async compile(projectDir: string, contracts?: string, useV2: boolean = false) {
     let contractsPath: string;
 
     if (contracts !== undefined) {
@@ -17,10 +17,10 @@ export class Compiler {
       contractsPath = path.join(projectDir, 'contracts');
     }
 
-    return this.compileInternal(contractsPath);
+    return this.compileInternal(contractsPath, useV2);
   }
 
-  async compileInternal(fileOrDir: string) {
+  async compileInternal(fileOrDir: string, useV2: boolean) {
     const stats = fs.statSync(fileOrDir);
 
     if (stats.isDirectory()) {
@@ -32,11 +32,11 @@ export class Compiler {
         }
 
         const childPath = path.join(fileOrDir, child);
-        await this.compileInternal(childPath);
+        await this.compileInternal(childPath, useV2);
       }
     } else if (stats.isFile()) {
       if (fileOrDir.endsWith('.py') || fileOrDir.endsWith('.cs')) {
-        await this.compileContract(path.dirname(fileOrDir), path.basename(fileOrDir));
+        await this.compileContract(useV2, path.dirname(fileOrDir), path.basename(fileOrDir));
       } else {
         throw Error('Compile Error: file type is wrong');
       }
@@ -45,7 +45,7 @@ export class Compiler {
     }
   }
 
-  async compileContract(dir: string, name: string, abiSavePath?: string, avmSavePath?: string) {
+  async compileContract(useV2: boolean, dir: string, name: string, abiSavePath?: string, avmSavePath?: string) {
     const contractPath = path.join(dir, name);
 
     const code = loadContract(contractPath);
@@ -55,7 +55,12 @@ export class Compiler {
 
     if (contractPath.endsWith('.py')) {
       type = 'Python';
-      url = 'https://smartxcompiler.ont.io/api/beta/python/compile';
+
+      if (useV2) {
+        url = 'https://smartxcompiler.ont.io/api/v2.0/python/compile';
+      } else {
+        url = 'https://smartxcompiler.ont.io/api/beta/python/compile';
+      }
     } else if (contractPath.endsWith('.cs')) {
       type = 'CSharp';
       url = 'https://smartxcompiler.ont.io/api/v1.0/csharp/compile';

@@ -59,7 +59,7 @@ export class Compiler {
       if (useV2) {
         url = 'https://smartxcompiler.ont.io/api/v2.0/python/compile';
       } else {
-        url = 'https://smartxcompiler.ont.io/api/beta/python/compile';
+        url = 'https://smartxcompiler.ont.io/api/v1.0/python/compile';
       }
     } else if (contractPath.endsWith('.cs')) {
       type = 'CSharp';

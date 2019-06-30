@@ -1,6 +1,6 @@
 {
   "name": "punica-ts",
-  "version": "0.2.40",
+  "version": "0.2.41",
   "description": "Punica CLI - The Ontology Blockchain dApp development framework",
   "bin": {
     "punica-ts": "./lib/punica-ts.js"
